@@ -140,8 +140,10 @@ $(function () {
         { label: "", data: Math.floor (Math.random() * 100 + 140) }, 
         { label: "", data: Math.floor (Math.random() * 100 + 30) },
         { label: "", data: Math.floor (Math.random() * 100 + 60) }, 
-        { label: "", data: Math.floor (Math.random() * 100 + 90) }, 
-        { label: "", data: Math.floor (Math.random() * 100 + 120) }, 
+        { label: "", data: Math.floor (Math.random() * 100 + 60) }, 
+        { label: "", data: Math.floor (Math.random() * 100 + 60) }, 
+        { label: "", data: Math.floor (Math.random() * 100 + 60) }, 
+        { label: "", data: Math.floor (Math.random() * 100 + 60) }, 
     ];
     chartOptions = {        
         series: {
