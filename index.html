@@ -245,7 +245,7 @@
   	<!-- Flot Charts -->
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/c3.min.js"></script>
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/d3.min.js"></script>
-	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/c3.custom.js"></script>
+	<script src="./plugins/c3-chart/c3.custom.js"></script>
   	<!-- Flot Charts -->
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.min.js"></script>
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.time.min.js"></script>
@@ -493,11 +493,11 @@
     Object.keys(data.actualTotals).forEach((user, index)=>{
     	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)*100+'%</span></li>';
     	Piedata.push({ label: "", data: Math.floor(data.actualTotals[user]) });
-    	variance += (data.actualTotals[user] - data.average)^2;
+    	variance += Math.pow(data.actualTotals[user] - data.average, 2);
     });
 
     variance = variance/data.users.length;
-    $('a-balance').html(variance.toFixed(2));
+    $('#a-balance').html(variance.toFixed(2));
     chartOptions = {        
         series: {
             pie: {
