@@ -194,26 +194,6 @@
 					        	<div class="col-12 col-sm-6">
 					        		<div class="split-list">
 								        <ul class="adv-stats">
-											<li>
-												<i class="fa fa-circle-o"></i>
-												mingran <span id="a-mingran">22%</span>
-											</li>
-											<li>
-												<i class="fa fa-circle-o "></i>
-												boyao <span id="a-boyao">11%</span>
-											</li>
-											<li>
-												<i class="fa fa-circle-o"></i>
-												yimian <span id="a-yimian">40%</span>
-											</li>
-											<li>
-												<i class="fa fa-circle-o"></i>
-												xiaotian <span id="a-xiaotian">17%</span>
-											</li>
-											<li>
-												<i class="fa fa-circle-o"></i>
-												hao <span id="a-hao">10%</span>
-											</li>
 										</ul>
 								    </div>
 					        	</div>
@@ -328,17 +308,17 @@
 
 
 		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
-		var lastWeekByUser = {};
+		lastWeekByUser = {};
 		data.items.forEach(function(item){
 			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60){
 				lastWeekTotal += Number(item.value);
+                if(!lastWeekByUser.hasOwnProperty(item.user)) lastWeekByUser[item.user] = 0;
 				lastWeekByUser[item.user] += Number(item.value);
 			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60){
 				lastSecodeWeekTotal += Number(item.value);
 			}
 		});
 
-	
 
 
 			$('#week-avg').html(Number(lastWeekTotal/7).toFixed(2));
@@ -498,10 +478,6 @@
 			notice();
 
 
-											<li>
-												<i class="fa fa-circle-o"></i>
-												mingran <span id="a-mingran">22%</span>
-				</li>
 
 	var advStats = '';
 
@@ -510,11 +486,11 @@
 
     var Piedata, chartOptions;
 
+    var colors = ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'];
     Piedata = [];
-    data.['actualTotals'].forEach((val)=>{
-    	var user = Object.keys(val)[0];
-    	advStats += '<li><i class="fa fa-circle-o"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)+'</span></li>';
-    	Piedata.push({ label: "", data: Math.floor(val(user)) });
+    Object.keys(data.actualTotals).forEach((user, index)=>{
+    	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)*100+'%</span></li>';
+    	Piedata.push({ label: "", data: Math.floor(data.actualTotals[user]) });
     });
     chartOptions = {        
         series: {
@@ -541,7 +517,7 @@
             borderWidth: 0,
         },
         shadowSize: 0,
-        colors: ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'],
+        colors: colors
     };
     var holder = $('#advertising');
     if (holder.length) {
