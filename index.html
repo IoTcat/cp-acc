@@ -245,7 +245,7 @@
   	<!-- Flot Charts -->
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/c3.min.js"></script>
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/d3.min.js"></script>
-	<script src="./plugins/c3-chart/c3.custom.js"></script>
+	<!--<script src="./plugins/c3-chart/c3.custom.js"></script>-->
   	<!-- Flot Charts -->
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.min.js"></script>
 	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.time.min.js"></script>
@@ -310,11 +310,11 @@
 		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
 		lastWeekByUser = {};
 		data.items.forEach(function(item){
-			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60){
+			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60*60){
 				lastWeekTotal += Number(item.value);
                 if(!lastWeekByUser.hasOwnProperty(item.user)) lastWeekByUser[item.user] = 0;
 				lastWeekByUser[item.user] += Number(item.value);
-			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60){
+			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60*60){
 				lastSecodeWeekTotal += Number(item.value);
 			}
 		});
@@ -530,6 +530,45 @@
         $.plot(holder, Piedata, chartOptions );
         $('.adv-stats').html(advStats);
     }   
+
+
+    var daily_avg = ['data1'], daily_avg_week = ['data2'];
+
+    var i = data.items.length-1;
+    for(; i >= 0; i--){
+    	var day = parseInt((new Date().valueOf()/1000 + new Date().getHours()*3600 - 7*24*60*60 - item.timestamp)/24*60*60);
+    	if(daily_avg.length == day+1) daily_avg[dat+1] = 0;
+    	daily_avg[dat+1] += item.val;
+	}
+
+	for(var i = 1; i < daily_avg.length; i ++){
+		daily_avg_week[i] = 0;
+		var ii = i
+		for(; ii > i-7 && ii >0; ii --){
+			daily_avg_week[i] += daily_avg[ii];
+		}
+		daily_avg_week[i] = daily_avg_week[i]/(i-ii);
+	}
+
+
+
+
+	c3.generate( {
+	    bindto:"#barAreaGraph", data: {
+	        columns:[daily_avg, daily_avg_week], types: {
+	            data1: "bar", data2: "area"
+	        }
+	        , names: {
+	            data1: "Payment", data2: "Ghost Payment"
+	        }
+	        , colors: {
+	            data1: "#E9BB27", data2: "#3a86c8"
+	        }
+	    }
+	}
+
+	);
+
 
 
 
