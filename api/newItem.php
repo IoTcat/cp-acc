@@ -44,6 +44,7 @@ while(!checkBalance($data, $threshold)){
 	if($data['average'] - $data['virtualTotals'][$first] > $threshold){
 		setBalance($first, $last, $threshold, $tableId, $cnn);
 	}
+    Sleep(5);
 	$data = getFinalData($cnn, $tableId);
 }
 

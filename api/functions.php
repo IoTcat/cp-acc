@@ -694,10 +694,12 @@ function getTotals($tableData){
         $actualTotal = 0;
         $virtualTotal = 0;
         foreach($data['items'] as $item){
-            if($item['state'] == 1){
-                $actualTotal += $item['value'];
+            if($item['user'] == $user){
+                if($item['state'] == 1){
+                    $actualTotal += $item['value'];
+                }
+                $virtualTotal += $item['value'];
             }
-            $virtualTotal += $item['value'];
         }
         $data['actualTotals'][$user] = $actualTotal;
         $data['virtualTotals'][$user] = $virtualTotal;
@@ -738,8 +740,8 @@ function getThreshold($cnn, $tableId){
 
 
 function checkBalance($data, $threshold){
-    foreach($data['virtualTotals'] as $item){
-        if($item - $data['average'] < $threshold && $item - $data['average'] > -$threshold){
+    foreach($data['virtualTotals'] as $user => $item){
+        if($data['average'] - $item > $threshold){
         }else{
             return false;
         }
@@ -779,20 +781,23 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
     $lastData = db__getData($auth, "account", "hash", $last)[0];
 
 
-    yimian__mail($firstData['email'], "CP-ACC消息: 您需要给".$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
-
-根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
-
-感谢您使用本站服务，祝您生活愉悦！
-呓喵酱(@iotcat)", "CP-ACC");
-
     yimian__mail($lastData['email'], "CP-ACC消息: 您将从".$firstData['nickname']."收到".$threshold."磅/元", "亲爱的".$lastData['nickname']."：
 
-根据系统的计算，您将从".$lastData['nickname']."(".$lastData['email'].")"."收取".$threshold."磅/元，以保持大家的公共支出相对公平。请在收到对方转账后点击下方确认链接或登入<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>进行确认。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
+根据系统的计算，您将从".$firstData['nickname']."(".$firstData['email'].")"."收取".$threshold."磅/元，以保持大家的公共支出相对公平。请在收到对方转账后点击下方确认链接或登入<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>进行确认。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
 
 确认链接: <a href='https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."'>https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."</a>
 
 感谢您使用本站服务，祝您生活愉悦！
 呓喵酱(@iotcat)", "CP-ACC");
+
+Sleep(10);
+
+curl__post('https://api.yimian.xyz/mail/?to='.$firstData['email'].'&from=CP-ACC&subject=CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元"."body=亲爱的".$firstData['nickname']."：
+
+根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
+
+感谢您使用本站服务，祝您生活愉悦！
+呓喵酱(@iotcat)", array());
+
 
 }

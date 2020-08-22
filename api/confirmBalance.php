@@ -5,9 +5,12 @@ $first = $_REQUEST['first'];
 $last = $_REQUEST['last'];
 
 
+
 if(!isset($first) || !isset($last)) die();
 
 $cnn = db__connect();
+
+if(!db__rowNum($cnn, "account", "id", $first) || !db__rowNum($cnn, "account", "id", $last)) die();
 
 db__pushData($cnn, "account", array(
 	"state" => '1'
@@ -20,7 +23,6 @@ db__pushData($cnn, "account", array(
 ), array(
 	"id" => $last
 ));
-
 
 echo '<script>
 alert("收款确认成功");

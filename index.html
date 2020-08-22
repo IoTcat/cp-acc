@@ -261,6 +261,7 @@
 
 
 	<script type="text/javascript">
+function load(){
 	session.onload(function(){
 		if(page.params.hasOwnProperty('type') && page.params.type == 'join'){
 
@@ -309,10 +310,12 @@
 
 		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
 		lastWeekByUser = {};
+        data.users.forEach(function(user){
+            lastWeekByUser[user] = 0;
+        });
 		data.items.forEach(function(item){
 			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60*60){
 				lastWeekTotal += Number(item.value);
-                if(!lastWeekByUser.hasOwnProperty(item.user)) lastWeekByUser[item.user] = 0;
 				lastWeekByUser[item.user] += Number(item.value);
 			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60*60){
 				lastSecodeWeekTotal += Number(item.value);
@@ -343,16 +346,16 @@
 		                          <div class="d-flex align-items-center">
 		                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin`;
 		                if(i.type == "external") s += 3;
-		                if(i.type == "innerF" && !i.state) s += 4;
-		                if(i.type == "innerF" && i.state) s += 5;
+		                if(i.type == "innerF" && !(i.state == '1')) s += 4;
+		                if(i.type == "innerF" && (i.state == '1')) s += 5;
 		                s += `.png" alt="coin image">
 		                            <div class="ml-10">
 		                              <h4 class="coin-name">`;
 		                if(i.type == 'external') s += 'payment';
 		                if(i.type == 'innerF') s += 'circulation';
 		                if(i.type == "external") s += ' - ' + data.usersName[i.user]
-		                if(i.type == "innerF" && !i.state) s += ' - ' + data.usersName[i.user] + ' -> ' + data.usersName[i.comments];
-		                if(i.type == "innerF" && i.state) s += ' - ' + data.usersName[i.user] + ' 👍  ' + data.usersName[i.comments];
+		                if(i.type == "innerF" && !(i.state == '1')) s += ' - ' + data.usersName[i.user] + ' -> ' + data.usersName[i.comments];
+		                if(i.type == "innerF" && (i.state == '1')) s += ' - ' + data.usersName[i.comments] + ' 👍  ' + data.usersName[i.user];
 		                s += `</h4>
 		                              <small class="text-muted">`;
 		                s += i.created_at;
@@ -383,7 +386,7 @@
 
 			var userNotice = [];
 			data['itemsByUser'][session.get('hash')].forEach((item)=>{
-				if(!item.state){
+				if(!(item.state == '1')){
 					userNotice.push(item);
 				}
 			});
@@ -447,7 +450,7 @@
 		                            <div class="ml-10">
 		                              <h4 class="coin-name">`;
 
-		            if(item.value < 0) s += `You will Get £50 from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:confirm(`+item.created_at+`);">Confirm to Recived</button>`;
+		            if(item.value < 0) s += `You will Get £50 from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:page.confirm('`+item.created_at+`');">Confirm to Recived</button>`;
 		            if(item.value > 0) s += `Please Give £50 to `+ data.usersName[item.comments];
 
 		            s += `</h4>
@@ -477,6 +480,25 @@
 
 			notice();
 
+            page.confirm = function(created_at){
+
+                var arr = [];
+
+                data['items'].forEach((item)=>{
+                    if(item.type != 'external' && item.created_at == created_at){
+                        arr.push(item.id);
+                    }
+                });
+
+                $.get('https://cp-acc.yimian.xyz/api/confirmBalance.php?type=ajax&first='+arr[0]+'&last='+arr[1], function(res){
+
+                        load();
+                    
+                });
+            }
+
+
+
 
 
 	var advStats = '';
@@ -491,7 +513,7 @@
     var colors = ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'];
     Piedata = [];
     Object.keys(data.actualTotals).forEach((user, index)=>{
-    	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)*100+'%</span></li>';
+    	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+((lastWeekByUser[user]/lastWeekTotal)*100).toFixed(2)+'%</span></li>';
     	Piedata.push({ label: "", data: Math.floor(data.actualTotals[user]) });
     	variance += Math.pow(data.actualTotals[user] - data.average, 2);
     });
@@ -532,16 +554,32 @@
     }   
 
 
-    var daily_avg = ['data1'], daily_avg_week = ['data2'];
+    var daily_avg = [], daily_avg_week = ['data2'];
 
-    var i = data.items.length-1;
+    for(var i = 0; i <= 30; i ++){
+        daily_avg[i] = 0;
+    }
+
+    var i = data.items.length - 1;
     for(; i >= 0; i--){
-    	var day = parseInt((new Date().valueOf()/1000 + new Date().getHours()*3600 - 7*24*60*60 - item.timestamp)/24*60*60);
-    	if(daily_avg.length == day+1) daily_avg[dat+1] = 0;
-    	daily_avg[dat+1] += item.val;
+    	var day = parseInt((new Date().valueOf()/1000 + (24-new Date().getHours())*3600 - data.items[i].timestamp)/(24*60*60));
+        if(day > 30){
+            break;
+        }
+        console.log(day)
+    	if(!daily_avg.hasOwnProperty(day)) daily_avg[day] = 0;
+    	daily_avg[day] += Number(data.items[i].value);
 	}
 
-	for(var i = 1; i < daily_avg.length; i ++){
+    for(var i = daily_avg.length - 1; i > 0 && daily_avg[i] == 0; i --){
+        daily_avg.pop();
+    }
+
+        console.log(daily_avg)
+    daily_avg.push('data1');
+    daily_avg = daily_avg.reverse();
+
+    for(var i = daily_avg.length - 1; i >0; i --){
 		daily_avg_week[i] = 0;
 		var ii = i
 		for(; ii > i-7 && ii >0; ii --){
@@ -552,7 +590,7 @@
 
 
 
-
+console.log(daily_avg, daily_avg_week)
 	c3.generate( {
 	    bindto:"#barAreaGraph", data: {
 	        columns:[daily_avg, daily_avg_week], types: {
@@ -575,7 +613,8 @@
 		});
 
 	});
-
+}
+load();
 		$("#aaa").bind("input propertychange",function(event){
        		console.log($("#aaa").val());
        		$("#aaa").val(clearNoNum($("#aaa").val()))
@@ -638,23 +677,6 @@ function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意
     }
     return result;
 }
-
-function confirm(created_at){
-
-	var arr = [];
-
-	data['items'].forEach((item)=>{
-		if(item.created_at == created_at){
-			arr.push(item.id);
-		}
-	});
-
-	$.post('https://cp-acc.yimian.xyz/api/confirmBalance.php&first='+arr[0]+'&last='+arr[1], function(res){
-		notice();
-	});
-}
-
-
 
 
 
