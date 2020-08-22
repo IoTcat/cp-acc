@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+	<title>Payment History</title>
+
+	<!-- Google font file. If you want you can change. -->
+	<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,900" rel="stylesheet">
+
+	<!-- Fontawesome font file css -->
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+
+	<!-- Animate css file for css3 animations. for more : https://daneden.github.io/animate.css -->
+	<!-- Only use animate action. If you dont use animation, you don't have to add.-->
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/css/animate.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/css/cryptocoins.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/c3.css">
+
+	<!-- Template global css file. Requared all pages -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/css/global.style.css">
+
+	<!-- Swiper slider css file -->
+	<link rel="stylesheet" href="https://cdn.yimian.xyz/smart-settlement/css/swiper.min.css">
+
+	<!--turbo slider plugin css file -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/plugins/turbo-slider/turbo.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/shaky/shaky.css">
+	<script>var block_aplayer = true;</script>
+	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-head.min.js"></script>
+
+</head>
+
+<body>
+	
+	<div class="wrapper ">
+		<div class="nav-menu">
+			<nav class="menu">
+				<!-- Menu navigation start -->
+				<div class="nav-container">
+					<ul class="main-menu">
+						<li class="">
+							<a href="index.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
+						</li>
+						<li class="active">
+							<a href="buy-sell.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
+						</li>
+						<li class="">
+							<a onclick="javascript:logout();" href="#" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Log out</strong></a>
+						</li>
+					</ul>
+				</div>
+			<!-- Menu navigation end -->
+			</nav>
+		</div>
+		<div class="wrapper-inline">
+			<!-- Header area start -->
+			<header class="no-background"> <!-- extra class no-background -->
+
+				<a class="go-back-link" href="javascript:history.back();"><i class="fa fa-arrow-left"></i></a>
+				<div class="search-button" data-search="open">
+					<img id="no-icon" src="img/content/notification-no.png" class="not-icon1" alt="">
+					<img id="no-icon2" src="img/content/notification2-no.png" class="not-icon2" alt="">
+				</div>
+
+				<div class="navi-menu-button">
+					<em></em>
+					<em></em>
+					<em></em>
+				</div>
+
+			</header>
+			<!-- Header area end -->
+
+			<!--NOTIFICATION BOX CONTENT START-->
+			<div class="search-form">
+				<span class="close-search-form" data-search="close"><i class="fa fa-times"></i> </span>
+				<form>
+					<div class="search-input">
+						<br/>
+					</div>
+				</form>
+			    <ul class="notification-list list-unstyled" id="no-content">
+				</ul>
+			</div>
+			<!--NOTIFICATION BOX CONTENT END-->
+
+
+			<!-- Page content start -->
+			<main class="margin mt-0">
+
+				<div class="dash-balance">
+					<div class="dash-content relative">
+						<h3 class="w-text">ERP for CP Home</h3>
+						<div class="notification">
+							<h3 class="w-text" id="usr">xxx</h3>
+						</div>
+					</div>
+				</div>
+			   
+				<section class="container">
+					<h4 class="title-main">Recent Transactions</h4>
+					<ul class="transaction-list list-unstyled" id="account-events">
+					</ul>
+				</section>
+
+				<footer>
+					<div class="container">
+						<ul>
+							<li><a id="ushio-blog" href="https://www.eee.dog"><i class="fa fa-home"></i></a></li>
+							<li><a href="https://github.com/iotcat"><i class="fa fa-github"></i></a></li>
+							<li><a href="mailto:i@yimian.xyz"><i class="fa fa-envelope"></i></a></li>
+							<li><a href="https://www.eee.dog/feed"><i class="fa fa-rss"></i></a></li>
+						</ul>
+						<p>© 2018-<script type="text/javascript">document.write(new Date().getFullYear());</script> Made with <span class="shaky"><i style="color:red;" class="fa fa-heart"></i></span> by <a id="ushio-tome" href="https://iotcat.me">iotcat</a></p>
+					</div>
+				</footer>
+			</main>
+			<!-- Page content end -->
+		</div>
+	</div>
+
+	<!--Page loader DOM Elements. Requared all pages-->
+	<div class="sweet-loader">
+		<div class="box">
+		  	<div class="circle1"></div>
+		  	<div class="circle2"></div>
+		  	<div class="circle3"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-footer.min.js"></script>
+
+	<!-- JQuery library file. requared all pages -->
+	<script src="https://cdn.yimian.xyz/smart-settlement/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Swiper JS -->
+    <script src="https://cdn.yimian.xyz/smart-settlement/js/swiper.min.js"></script>
+
+	<!-- Template global script file. requared all pages -->
+	<script src="https://cdn.yimian.xyz/smart-settlement/js/global.script.js"></script>
+
+	<script type="text/javascript">
+	session.onload(function(){
+		if(page.params.hasOwnProperty('type') && page.params.type == 'join'){
+
+			window.location.href="./api/joinTable.php?hash="+session.get('hash')+'&tableId='+page.params.tableId;
+			return;
+		}
+
+		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
+			if(!data.length){
+				alert('请先创建一个公共账户！');
+				window.location.href="./setTable.html";
+				return;
+			}
+			$('#usr').html(session.get('nickname'));
+
+			var s = '';
+			data['items'].forEach((i)=>{
+				if(i.type == 'external'){
+					s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin3.png" alt="coin image">
+	                            <div class="ml-10">
+	                              <h4 class="coin-name">payment`;
+	                s += ' - ' + data.usersName[i.user];
+	                s += `</h4>
+	                              <small class="text-muted">`;
+	                s += i.created_at;
+	                s += `</small>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            `;
+	                s += `<small class="d-block mb-0 txt-red">£-`+Number(i.value).toFixed(2) + `</small>`;
+
+	                s += `
+	                <small class="text-muted d-block"><a href='`+i.url+`'>see invoice</a></small>
+	                          </div>
+	                        </div>
+						</li>
+`;
+				}
+
+			});
+
+			$('#account-events').html(s);
+
+
+
+
+			var userNotice = [];
+			data['itemsByUser'][session.get('hash')].forEach((item)=>{
+				if(!item.state){
+					userNotice.push(item);
+				}
+			});
+
+			function notice(){
+				var s = '';
+
+				if(!userNotice.length){
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <div class="">
+	                              <h5 class="coin-name">You have NO notifications!!</h5>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            <a href=""></a>
+	                          </div>
+	                        </div>
+						</li>`;
+					$('#no-content').html(s);
+					$("#no-icon").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification-no.png');
+					$("#no-icon2").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification2-no.png');
+					return;
+				}
+
+
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <div class="">
+	                              <h5 class="coin-name">Your last `;
+
+	            s += userNotice.length;
+	            s += ` notifications</h5>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            <a href=""></a>
+	                          </div>
+	                        </div>
+						</li>`;
+
+				userNotice.forEach(function(item){
+					s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                            <div class="d-flex align-items-center">
+		                            <div class="notice-icon `;
+		            if(item.value < 0) s += `available`;
+		            if(item.value > 0) s += `away`;
+
+		            s += `">
+		                                <i class="fa fa-`;
+		            if(item.value < 0) s += `check`;
+		            if(item.value > 0) s += `clock-o`;
+		            s += `"></i>
+		                            </div>
+		                            <div class="ml-10">
+		                              <h4 class="coin-name">`;
+
+		            if(item.value < 0) s += `You will Get £50 from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:confirm(`+item.created_at+`);">Confirm to Recived</button>`;
+		            if(item.value > 0) s += `Please Give £50 to `+ data.usersName[item.comments];
+
+		            s += `</h4>
+		                              <small class="text-muted">`;
+		            s += timeago(new Date(item.created_at.replace(/-/g, '/')).getTime());
+		            s += `</small>
+		                            </div>
+	                            </div>
+	                        </div>
+						</li>`;
+				});
+
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                            <div class="d-flex align-items-center">
+		                            <a href="" class="text-muted">The end of all notifications</a>
+	                            </div>
+	                        </div>
+						</li>`;
+
+				$('#no-content').html(s);
+				$("#no-icon").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification-yes.png');
+				$("#no-icon2").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification2-yes.png');
+
+			};
+
+
+
+			notice();
+
+
+
+
+
+
+		});
+	});
+		
+
+
+
+
+		/* notification func */
+
+function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
+    var minute = 1000 * 60;      //把分，时，天，周，半个月，一个月用毫秒表示
+    var hour = minute * 60;
+    var day = hour * 24;
+    var week = day * 7;
+    var halfamonth = day * 15;
+    var month = day * 30;
+    var now = new Date().getTime();   //获取当前时间毫秒
+    var diffValue = now - dateTimeStamp;//时间差
+
+    if(diffValue < 0){
+        return;
+    }
+    var minC = diffValue/minute;  //计算时间差的分，时，天，周，月
+    var hourC = diffValue/hour;
+    var dayC = diffValue/day;
+    var weekC = diffValue/week;
+    var monthC = diffValue/month;
+    if(monthC >= 1 && monthC <= 3){
+        result = " " + parseInt(monthC) + "month ago"
+    }else if(weekC >= 1 && weekC <= 3){
+        result = " " + parseInt(weekC) + "week ago"
+    }else if(dayC >= 1 && dayC <= 6){
+        result = " " + parseInt(dayC) + "day ago"
+    }else if(hourC >= 1 && hourC <= 23){
+        result = " " + parseInt(hourC) + "hours ago"
+    }else if(minC >= 1 && minC <= 59){
+        result =" " + parseInt(minC) + "minutes ago"
+    }else if(diffValue >= 0 && diffValue <= minute){
+        result = "just now"
+    }else {
+        var datetime = new Date();
+        datetime.setTime(dateTimeStamp);
+        var Nyear = datetime.getFullYear();
+        var Nmonth = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var Nhour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var Nminute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        result = Nyear + "-" + Nmonth + "-" + Ndate
+    }
+    return result;
+}
+
+
+function confirm(created_at){
+
+	var arr = [];
+
+	data['items'].forEach((item)=>{
+		if(item.created_at == created_at){
+			arr.push(item.id);
+		}
+	});
+
+	$.post('https://cp-acc.yimian.xyz/api/confirmBalance.php&first='+arr[0]+'&last='+arr[1], function(res){
+		notice();
+	});
+}
+
+
+
+	</script>
+
+
+</body>
+
+</html>
