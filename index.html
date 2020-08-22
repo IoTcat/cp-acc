@@ -328,13 +328,18 @@
 
 
 		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
+		var lastWeekByUser = {};
 		data.items.forEach(function(item){
 			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60){
 				lastWeekTotal += Number(item.value);
+				lastWeekByUser[item.user] += Number(item.value);
 			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60){
 				lastSecodeWeekTotal += Number(item.value);
 			}
 		});
+
+	
+
 
 			$('#week-avg').html(Number(lastWeekTotal/7).toFixed(2));
 			$('#total-bar').css('width', (data['actualTotals'][session.get('hash')] / lastWeekTotal)*100+'%');
@@ -490,9 +495,60 @@
 
 			};
 
-
-
 			notice();
+
+
+											<li>
+												<i class="fa fa-circle-o"></i>
+												mingran <span id="a-mingran">22%</span>
+				</li>
+
+	var advStats = '';
+
+
+
+
+    var Piedata, chartOptions;
+
+    Piedata = [];
+    data.['actualTotals'].forEach((val)=>{
+    	var user = Object.keys(val)[0];
+    	advStats += '<li><i class="fa fa-circle-o"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)+'</span></li>';
+    	Piedata.push({ label: "", data: Math.floor(val(user)) });
+    });
+    chartOptions = {        
+        series: {
+            pie: {
+                show: true,  
+                innerRadius: .8, 
+                stroke: {
+                    width: 1,
+                }
+            }
+        }, 
+        shadowSize: 0,
+        legend: {
+            position: 'sw'
+        },
+        tooltip: true,
+
+        tooltipOpts: {
+            content: '%s: %y'
+        },
+        grid:{
+            hoverable: false,
+            clickable: false,
+            borderWidth: 0,
+        },
+        shadowSize: 0,
+        colors: ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'],
+    };
+    var holder = $('#advertising');
+    if (holder.length) {
+        $.plot(holder, Piedata, chartOptions );
+        $('.adv-stats').html(advStats);
+    }   
+
 
 
 		});
