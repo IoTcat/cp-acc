@@ -484,6 +484,8 @@
 
 
 
+	var variance = 0;
+
     var Piedata, chartOptions;
 
     var colors = ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'];
@@ -491,7 +493,11 @@
     Object.keys(data.actualTotals).forEach((user, index)=>{
     	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+(lastWeekByUser[user]/lastWeekTotal)*100+'%</span></li>';
     	Piedata.push({ label: "", data: Math.floor(data.actualTotals[user]) });
+    	variance += (data.actualTotals[user] - data.average)^2;
     });
+
+    variance = variance/data.users.length;
+    $('a-balance').html(variance.toFixed(2));
     chartOptions = {        
         series: {
             pie: {
