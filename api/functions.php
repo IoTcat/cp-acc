@@ -592,7 +592,7 @@ function getPostHttpBody($param)
 
 
 /* sms */
-require __DIR__ . "/../../lib/qcloudsms/src/index.php";
+require __DIR__ . "/../../../lib/qcloudsms/src/index.php";
 
 use Qcloud\Sms\SmsSingleSender;
 use Qcloud\Sms\SmsMultiSender;
@@ -656,7 +656,7 @@ function getItems($cnn, $tableId){
     return db__getData($cnn, "account", "table", $tableId);
 }
 function getTableInfo($cnn, $tableId){
-    $res = db__getData($cnn, "table", "table", $tableId);
+    $res = db__getData($cnn, "table", "id", $tableId);
     return $res[0];
 }
 function getTableData($cnn, $tableId){
@@ -675,7 +675,7 @@ function getTableDataByUsers($cnn, $tableId){
                 array_push($arr, $item);
             }
         }
-        array_push($o['itemsByUser'], $arr);
+        $o['itemsByUser'][$user] = $arr;
     }
     return $o;
 }
@@ -716,7 +716,7 @@ function getUsersInfo($tableData){
     $auth = db__connect("","","","auth");
     $tableData['usersName'] = array();
     foreach($tableData['users'] as $user){
-        array_push($tableData['usersName'], db__getData($auth, "account", "hash", $user)[0]['nickname']);
+        $tableData['usersName'][$user] = db__getData($auth, "account", "hash", $user)[0]['nickname'];
     }
     return $tableData;
 }
@@ -725,8 +725,8 @@ function getUsersInfo($tableData){
 function getFinalData($cnn, $tableId){
     $d = getTableDataByUsers($cnn, $tableId);
     $o = getTotals($d);
-    $o = getAverage($o);
     $o = getUsersInfo($o);
+    $o = getAverage($o);
     return $o;
 }
 

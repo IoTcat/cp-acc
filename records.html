@@ -59,7 +59,7 @@
 			<!-- Header area start -->
 			<header class="no-background"> <!-- extra class no-background -->
 
-				<a class="go-back-link" href="javascript:history.back();"><i class="fa fa-arrow-left"></i></a>
+				<a class="go-back-link" href="./"><i class="fa fa-arrow-left"></i></a>
 				<div class="search-button" data-search="open">
 					<img id="no-icon" src="img/content/notification-no.png" class="not-icon1" alt="">
 					<img id="no-icon2" src="img/content/notification2-no.png" class="not-icon2" alt="">
@@ -93,7 +93,7 @@
 
 				<div class="dash-balance">
 					<div class="dash-content relative">
-						<h3 class="w-text">ERP for CP Home</h3>
+						<h3 class="w-text" id="title"></h3>
 						<div class="notification">
 							<h3 class="w-text" id="usr">xxx</h3>
 						</div>
@@ -155,7 +155,29 @@
 				alert('请先创建一个公共账户！');
 				window.location.href="./setTable.html";
 				return;
-			}
+            }
+
+
+            if(cookie.get('tableId')){
+                var id = -1;
+                for(var i = 0; i < data.length; i ++){
+                    if(data[i].id == cookie.get('tableId')){
+                        data = data[i];
+                        id = i;
+                    }
+                }
+                if(id == -1){
+                    cookie.set('tableId', data[0].id);
+                    data = data[0];
+                }
+            }else{
+                cookie.set('tableId', data[0].id);
+                data = data[0];
+            }
+			window.data = data;
+
+
+            $('#title').html(data.name);
 			$('#usr').html(session.get('nickname'));
 
 			var s = '';
@@ -180,7 +202,7 @@
 	                s += `<small class="d-block mb-0 txt-red">£-`+Number(i.value).toFixed(2) + `</small>`;
 
 	                s += `
-	                <small class="text-muted d-block"><a href='`+i.url+`'>see invoice</a></small>
+	                <small class="text-muted d-block"><a href='`+atob(i.url)+`'>see invoice</a></small>
 	                          </div>
 	                        </div>
 						</li>

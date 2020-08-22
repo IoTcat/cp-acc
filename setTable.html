@@ -26,7 +26,7 @@
 		<div class="wrapper-inline">
 			<!-- Header area start -->
 			<header> <!-- extra class no-background -->
-				<a class="go-back-link" href="javascript:history.back();"><i class="fa fa-arrow-left"></i></a>
+				<a class="go-back-link" href="./"><i class="fa fa-arrow-left"></i></a>
 				<h1 class="page-title">设置公共账户信息</h1>
 
 			</header>
@@ -61,8 +61,8 @@
 					</div>
 					<br/><br/>
 					<div id="qr" align="center" style="display: none;">
-						<p>请让成员点击链接或扫描二维码加入账户：</p>
-						<input type="text" id="url">
+						<p>请让成员打开链接或扫描二维码加入账户：</p>
+						<input width="60%" type="text" id="url">
 						<div id="qrcode"></div>
 					</div>
 				</div>
@@ -100,6 +100,14 @@
 session.onload(function(){
 
 	if(page.params.hasOwnProperty('tableId')){
+		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
+                data.forEach(function(item){
+                    if(item.id == page.params.tableId){
+                        $('#name').val(item.name);
+                        $('#threshold').val(item.threshold);
+                    }        
+                });
+        });
 		$('#qr').show();
 		$('#url').val('https://cp-acc.yimian.xyz/?type=join&tableId='+page.params.tableId);
 		qrcode.makeCode('https://cp-acc.yimian.xyz/?type=join&tableId='+page.params.tableId);

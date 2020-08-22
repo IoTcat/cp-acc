@@ -15,8 +15,7 @@ db__pushData($cnn, "table", array(
 	"state" => '1',
 	"name" => $name,
 	"threshold" => $threshold,
-	"created_by" => $hash,
-	"created_at" => date("Y-m-d H:i:s", time())
+	"updated_at" => date("Y-m-d H:i:s", time())
 ), array(
 	"id" => $tableId
 ));

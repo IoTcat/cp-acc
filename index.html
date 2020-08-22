@@ -51,7 +51,7 @@
 						</li>
 
 						<li class="">
-							<a href="setTable.html"><img src="img/content/icons/11.png" alt=""><strong>Settings</strong> </a>
+							<a href="#" id="setTable"><img src="img/content/icons/11.png" alt=""><strong>Setting</strong> </a>
 						</li>
 						<li class="">
 							<a href="https://login.yimian.xyz/logout.html" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Log out</strong></a>
@@ -97,7 +97,7 @@
 
 				<div class="dash-balance">
 					<div class="dash-content relative">
-						<h3 class="w-text">ERP for CP Home</h3>
+						<h3 class="w-text" id="title"></h3>
 						<div class="notification">
 							<h3 class="w-text" id="usr">xxx</h3>
 						</div>
@@ -110,7 +110,7 @@
 	                        <div class="d-flex flex-grow">
 	                          <div class="mr-auto">
 	                            <h1 class="b-val"> £<span id="week-avg"></span> </h1>
-	                            <p class="g-text mb-10">Weekly Payment</p>
+	                            <p class="g-text mb-10">Average Daily Payment</p>
 	                            <div class="badge badge-pill" id="week-avg-rate"> 43.55% <i style="color:red;" class="fa fa-arrow-down ml-10"></i></div>
 	                          </div>
 	                          <div class="ml-auto align-self-end">
@@ -276,8 +276,8 @@
     <script src="https://cdn.yimian.xyz/smart-settlement/plugins/jquery-sparkline/jquery.sparkline.js"></script>
 
 	<!-- Template global script file. requared all pages -->
-	<script src="https://cdn.yimian.xyz/smart-settlement/js/app-charts.js"></script>
-	<script src="https://cdn.yimian.xyz/smart-settlement/js/global.script.js"></script>
+    <!--<script src="./js/app-charts.js"></script>-->
+	<script src="./js/global.script.js"></script>
 
 
 	<script type="text/javascript">
@@ -295,8 +295,30 @@
 				return;
 			}
 
+            if(cookie.get('tableId')){
+                var id = -1;
+                for(var i = 0; i < data.length; i ++){
+                    if(data[i].id == cookie.get('tableId')){
+                        data = data[i];
+                        id = i;
+                    }
+                }
+                if(id == -1){
+                    cookie.set('tableId', data[0].id);
+                    data = data[0];
+                }
+            }else{
+                cookie.set('tableId', data[0].id);
+                data = data[0];
+            }
 			window.data = data;
 
+
+            $('#setTable').click(function(){
+                window.location.href="./setTable.html?tableId="+data.id;        
+            });
+
+            $('#title').html(data.name);
 			$('#usr').html('Hi~ '+session.get('nickname'));
 			$('#total').html(Number(data.total));
 			$('#total-usr').html(Number(data['actualTotals'][session.get('hash')]));
@@ -305,15 +327,14 @@
 
 
 
-		var lastWeekTotal, lastSecodeWeekTotal;
-		data.items.foreach(function(item)=>{
-			if(item.tiemstamp > new Date().valueOf() - 7*24*60*1000){
-				lastWeekTotal += item.value;
-			}else if(item.tiemstamp > new Date().valueOf() - 14*24*60*1000){
-				lastSecodeWeekTotal += item.value;
+		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
+		data.items.forEach(function(item){
+			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60){
+				lastWeekTotal += Number(item.value);
+			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60){
+				lastSecodeWeekTotal += Number(item.value);
 			}
 		});
-
 
 			$('#week-avg').html(Number(lastWeekTotal/7).toFixed(2));
 			$('#total-bar').css('width', (data['actualTotals'][session.get('hash')] / lastWeekTotal)*100+'%');
@@ -323,7 +344,7 @@
 
 
 			var show = [];
-			for(var i = data['items'].length; i > data['items'].length-10; i --){
+            for(var i = data['items'].length - 1; i > data['items'].length-10 && i >= 0; i --){
 				if(data['items'][i]['value'] > 0 && data['items'][i]['type'] != 'innerT')
 				show.push(data['items'][i]);
 			}
@@ -342,7 +363,8 @@
 		                s += `.png" alt="coin image">
 		                            <div class="ml-10">
 		                              <h4 class="coin-name">`;
-		                s += i.type;
+		                if(i.type == 'external') s += 'payment';
+		                if(i.type == 'innerF') s += 'circulation';
 		                if(i.type == "external") s += ' - ' + data.usersName[i.user]
 		                if(i.type == "innerF" && !i.state) s += ' - ' + data.usersName[i.user] + ' -> ' + data.usersName[i.comments];
 		                if(i.type == "innerF" && i.state) s += ' - ' + data.usersName[i.user] + ' 👍  ' + data.usersName[i.comments];
@@ -354,7 +376,7 @@
 		                          </div>
 		                          <div>
 		                            `;
-		                if(i.type == 'external') s += `<small class="d-block mb-0 txt-red">£`+(i.value.toFixed(2) + `</small>`;
+		                if(i.type == 'external') s += `<small class="d-block mb-0 txt-red">£`+(Number(i.value).toFixed(2) )+ `</small>`;
 
 		                s += `
 		                            <small class="text-muted d-block">£`;
@@ -486,8 +508,8 @@
 				alert('illegal input');
 				return;
 			}
-			window.location.href='https://imgbed.yimian.xyz/imgbed/api.html?redirect=https://cp-acc.yimian.xyz/api/newItem.php&passby='+btoa(JSON.stringify({
-				tableId: data.id,
+			window.location.href='https://imgbed.yimian.xyz/api.html?redirect=https://cp-acc.yimian.xyz/api/newItem.php&passby='+btoa(JSON.stringify({
+				tableId: cookie.get('tableId'),
 				hash: session.get('hash'),
 				value: $("#aaa").val()
 			}));
@@ -571,7 +593,10 @@ function confirm(created_at){
  		return value;
     }
 </script>
+<script>
 
+
+</script>
 </body>
 
 </html>

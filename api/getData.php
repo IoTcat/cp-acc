@@ -7,7 +7,7 @@ $hash = $_REQUEST['hash'];
 
 if(!isset($hash)) die();
 
-$cnn = connect();
+$cnn = db__connect();
 $res = db__getData($cnn, "user", "user", $hash, "state", '1');
 
 $o = [];

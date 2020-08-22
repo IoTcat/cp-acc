@@ -34,6 +34,6 @@ db__pushData($cnn, "user", array(
 ));
 
 
-return json_encode(array(
+echo json_encode(array(
 	"tableId" => $tableId
 ));

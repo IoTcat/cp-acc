@@ -7,7 +7,7 @@ $url = $_REQUEST['url'];
 $passby = $_REQUEST['passby'];
 
 
-if(!isset($hash) || !isset($passby)) die();
+if(!isset($url) || !isset($passby)) die();
 
 $passby = json_decode(base64_decode($passby), true);
 
