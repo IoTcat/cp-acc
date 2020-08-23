@@ -27,11 +27,11 @@
 	<!--turbo slider plugin css file -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/smart-settlement/plugins/turbo-slider/turbo.css">
+
 	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/shaky/shaky.css">
 	<script>var block_aplayer = true;</script>
 	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-head.min.js"></script>
     <script>page.auth = ['email', 'nickname'];</script>
-
 </head>
 
 <body>
@@ -39,11 +39,27 @@
 	<div class="wrapper ">
 		<div class="nav-menu">
 			<nav class="menu">
+			
 				<!-- Menu navigation start -->
 				<div class="nav-container">
 					<ul class="main-menu">
-						<li class="">
+						<li>
 							<a href="index.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
+						</li>
+						<li class="active">
+							<a href="records.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
+						</li>
+						<li class="">
+							<a href="#" id="setTable"><img src="img/content/icons/11.png" alt=""><strong>Group Setting</strong> </a>
+						</li>
+						<li class="">
+							<a href="#" id="checkout" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/2.png" alt=""><strong>Checkout</strong></a>
+						</li>
+						<li class="">
+							<a href="#" id="switch"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/4.png" alt=""><strong>Other Groups</strong></a>
+						</li>
+						<li class="">
+							<a href="https://login.yimian.xyz/logout.html" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Log out</strong></a>
 						</li>
 					</ul>
 				</div>
@@ -54,7 +70,6 @@
 			<!-- Header area start -->
 			<header class="no-background"> <!-- extra class no-background -->
 
-				<a class="go-back-link" href="./"><i class="fa fa-arrow-left"></i></a>
 				<div class="search-button" data-search="open">
 					<img id="no-icon" src="https://cdn.yimian.xyz/smart-settlement/img/content/notification-no.png" class="not-icon1" alt="">
 					<img id="no-icon2" src="https://cdn.yimian.xyz/smart-settlement/img/content/notification2-no.png" class="not-icon2" alt="">
@@ -82,7 +97,6 @@
 			</div>
 			<!--NOTIFICATION BOX CONTENT END-->
 
-
 			<!-- Page content start -->
 			<main class="margin mt-0">
 
@@ -94,13 +108,14 @@
 						</div>
 					</div>
 				</div>
-			   
-				<section class="container">
-					<h4 class="title-main">Recent Transactions</h4>
-					<ul class="transaction-list list-unstyled" id="account-events">
-					</ul>
-				</section>
 
+			   <div id="body">
+					<section class="container">
+						<h4 class="title-main">Recent Transactions</h4>
+						<ul class="transaction-list list-unstyled" id="account-events-2">
+						</ul>
+					</section>
+				</div>
 				<footer>
 					<div class="container">
 						<ul>
@@ -125,29 +140,77 @@
 		  	<div class="circle3"></div>
 		</div>
 	</div>
-
 	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-footer.min.js"></script>
 
 	<!-- JQuery library file. requared all pages -->
-	<script src="https://cdn.yimian.xyz/smart-settlement/js/jquery-3.2.1.min.js"></script>
 
 	<!-- Swiper JS -->
     <script src="https://cdn.yimian.xyz/smart-settlement/js/swiper.min.js"></script>
 
+	 <!-- Initialize Swiper -->
+ 	
+  	<!-- Flot Charts -->
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/c3.min.js"></script>
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/c3-chart/d3.min.js"></script>
+	<!--<script src="./plugins/c3-chart/c3.custom.js"></script>-->
+  	<!-- Flot Charts -->
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.min.js"></script>
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.time.min.js"></script>
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.pie.min.js"></script>
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.tooltip.min.js"></script>
+	<script src="https://cdn.yimian.xyz/smart-settlement/plugins/flot/jquery.flot.resize.min.js"></script>
+    <!-- Sparkline-->
+    <script src="https://cdn.yimian.xyz/smart-settlement/plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
 	<!-- Template global script file. requared all pages -->
-	<script src="https://cdn.yimian.xyz/smart-settlement/js/global.script.js"></script>
+    <script src="./js/app-charts.js"></script>
+	<script src="./js/global.script.js"></script>
+
 
 	<script type="text/javascript">
+try{
+if(cookie.get('cache')){
+    data = JSON.parse(decodeURIComponent(escape(atob(cookie.get('cache')))));
+
+    $('#title').html(data.name);
+    $('#total').html(data.total);
+    $('#total-usr').html(data.userTotal);
+    $('#week-avg').html(data.lastWeekTotal);
+
+
+}
+}catch(e){}
+
+
+function load(){
 	session.onload(function(){
-
+        $('#usr').html('Hi~ '+session.get('nickname'));
         if(!session.get('email')) return;
-        function localLoad(data){
-			if(!data.length){
-				alert('请先创建一个公共账户！');
-				window.location.href="./setTable.html";
-				return;
-            }
+		if(page.params.hasOwnProperty('tableId')){
 
+			window.location.href="./api/joinTable.php?hash="+session.get('hash')+'&tableId='+page.params.tableId;
+			return;
+		}
+
+
+        function localLoad(data){
+            if(!session.get('hash')) return;
+            if(!data.length) return;
+            var buttons = [];
+
+
+            data.forEach(function(item){
+                if(item.id != cookie.get('tableId')){ 
+                    buttons.push(
+                        ['<button><b>'+item.name+'</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            cookie.set('tableId', item.id);
+                            load();
+                            $('.nav-menu').trigger('click');
+                            }, true]
+                    );    
+                }
+            });
 
             if(cookie.get('tableId')){
                 var id = -1;
@@ -167,42 +230,137 @@
             }
 			window.data = data;
 
+            buttons.push(
+                ['<button><b>Create New Group</b></button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        window.location.href="./setTable.html"; 
+                    }, true]
+            );    
+
+         
+           buttons.push(
+			    ['<button><b>close</b></button>', function (instance, toast) {
+			            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true]
+            );
+
+            $('#switch').unbind();
+          $("#switch").click(function(){
+            tips.question({
+			    timeout: 20000,
+			    close: false,
+			    overlay: true,
+			    displayMode: 'once',
+			    //id: 'question',
+			    zindex: 999,
+			    title: 'Groups',
+			    message: '',
+			    position: 'center',
+			    buttons: buttons
+			});
+          });
+
+
+
+            $('#setTable').unbind();
+            $('#setTable').click(function(){
+                window.location.href="./setTable.html?tableId="+data.id;        
+            });
 
             $('#title').html(data.name);
-			$('#usr').html(session.get('nickname'));
+			$('#total').html(Number(data.total));
+			$('#total-usr').html(Number(data['actualTotals'][session.get('hash')]));
+			$('#total-usr-bar').css('width', (data['virtualTotals'][session.get('hash')] / data.average)*100+'%');
+            $('#checkout').unbind();
+            $('#checkout').click(function(){
+                alert('You will checkout and quit from group '+data.name+'!!');
+                window.location.href="https://cp-acc.yimian.xyz/api/checkout.php?hash="+session.get('hash')+"&tableId="+data.id;        
+            });
 
+
+		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
+		lastWeekByUser = {};
+        data.users.forEach(function(user){
+            lastWeekByUser[user] = 0;
+        });
+		data.items.forEach(function(item){
+            if(item.state == '0') return;
+			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60*60){
+				lastWeekTotal += Number(item.value);
+				lastWeekByUser[item.user] += Number(item.value);
+			}else if(item.timestamp > new Date().valueOf()/1000 - 14*24*60*60){
+				lastSecodeWeekTotal += Number(item.value);
+			}
+		});
+
+
+
+			$('#week-avg').html(Number(lastWeekTotal/(7*data.users.length)).toFixed(2));
+			$('#total-bar').css('width', (data['actualTotals'][session.get('hash')] / lastWeekTotal)*100+'%');
+			if(lastWeekTotal > lastSecodeWeekTotal) $('#week-avg-rate').html(((lastWeekTotal - lastSecodeWeekTotal)/lastSecodeWeekTotal).toFixed(2)+'% <i style="color:red;" class="fa fa-arrow-up ml-10"></i>');
+			if(lastSecodeWeekTotal < lastSecodeWeekTotal) $('#week-avg-rate').html(((lastSecodeWeekTotal - lastWeekTotal)/lastSecodeWeekTotal).toFixed(2)+'% <i style="color:green;" class="fa fa-arrow-down ml-10"></i>');
+
+
+            var briefData = {
+                name: data.name,
+                total: data.total,
+                lastWeekTotal: Number(lastWeekTotal/(7*data.users.length)).toFixed(2),
+                userTotal: Number(data['actualTotals'][session.get('hash')]),
+                threshold: data.threshold
+            };
+            try{
+                cookie.set('cache', btoa(unescape(encodeURIComponent(JSON.stringify(briefData)))));
+            }catch(e){console.log(e, briefData)}
+			var show = [];
+            for(var i = data['items'].length - 1; i > data['items'].length-10 && i >= 0; i --){
+				if(data['items'][i]['value'] > 0 && (data['items'][i]['type'] == 'innerF' || data['items'][i]['type'] == 'external'))
+				show.push(data['items'][i]);
+			}
 			var s = '';
-            data['items'].reverse();
-			data['items'].forEach((i)=>{
-				if(i.type == 'external'){
-					s += `
-						<li>
-							<div class="d-flex align-items-center justify-content-between">
-	                          <div class="d-flex align-items-center">
-	                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin3.png" alt="coin image">
-	                            <div class="ml-10">
-	                              <h4 class="coin-name">payment`;
-	                s += ' - ' + data.usersName[i.user];
-	                s += `</h4>
-	                              <small class="text-muted">`;
-	                s += i.created_at;
-	                s += `</small>
-	                            </div>
-	                          </div>
-	                          <div>
-	                            `;
-	                s += `<small class="d-block mb-0 txt-red">£-`+Number(i.value).toFixed(2) + `</small>`;
+			show.forEach((i)=>{
 
-	                s += `
-	                <small class="text-muted d-block"><a href='`+atob(i.url)+`'>see invoice</a></small>
-	                          </div>
-	                        </div>
-						</li>
-`;
-				}
+
+						s += `
+							<li>
+								<div class="d-flex align-items-center justify-content-between">
+		                          <div class="d-flex align-items-center">
+		                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin`;
+		                if(i.type == "external") s += 3;
+		                if(i.type == "innerF" && !(i.state == '1')) s += 4;
+		                if(i.type == "innerF" && (i.state == '1')) s += 5;
+		                s += `.png" alt="coin image">
+		                            <div class="ml-10">
+		                              <h4 class="coin-name">`;
+		                if(i.type == 'external') s += 'payment';
+		                if(i.type == 'innerF') s += 'circulation';
+		                if(i.type == "external") s += ' - ' + data.usersName[i.user]
+		                if(i.type == "innerF" && !(i.state == '1')) s += ' - ' + data.usersName[i.user] + ' -> ' + data.usersName[i.comments];
+		                if(i.type == "innerF" && (i.state == '1')) s += ' - ' + data.usersName[i.comments] + ' 👍  ' + data.usersName[i.user];
+		                s += `</h4>
+		                              <small class="text-muted">`;
+		                s += i.created_at;
+		                s += `</small>
+		                            </div>
+		                          </div>
+		                          <div>
+		                            `;
+		                if(i.type == 'external') s += `<small class="d-block mb-0 txt-red">£`+(Number(i.value).toFixed(2) )+ `</small>`;
+
+		                s += `
+		                            <small class="text-muted d-block">£`;
+		                 s += Number(i.value);
+
+		                 s += `</small>
+		                          </div>
+		                        </div>
+							</li>
+						`;
+
+	
 
 			});
 
+		
 			$('#account-events').html(s);
 
 
@@ -301,14 +459,172 @@
 
 			};
 
-
 			notice();
 
+            page.confirm = function(created_at){
+
+                var arr = [];
+
+                data['items'].forEach((item)=>{
+                    if((item.type == 'innerF' || item.type == 'innerT') && item.created_at == created_at){
+                        arr.push(item.id);
+                    }
+                });
+
+                $.get('https://cp-acc.yimian.xyz/api/confirmBalance.php?type=ajax&first='+arr[0]+'&last='+arr[1], function(res){
+
+                        load();
+                    
+                });
+            }
+
+
+
+
+
+	var advStats = '';
+
+
+
+
+	var variance = 0;
+
+    var Piedata, chartOptions;
+
+    var colors = ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'];
+    Piedata = [];
+    Object.keys(data.virtualTotals).forEach((user, index)=>{
+    	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+((lastWeekByUser[user]/lastWeekTotal)*100).toFixed(2)+'%</span></li>';
+    	Piedata.push({ label: "", data: Math.floor(data.virtualTotals[user]) });
+    	variance += Math.pow(data.virtualTotals[user] - data.average, 2);
+    });
+
+    //Piedata.reverse();
+    variance = variance/data.users.length;
+    $('#a-balance').html(variance.toFixed(2));
+    chartOptions = {        
+        series: {
+            pie: {
+                show: true,  
+                innerRadius: .8, 
+                stroke: {
+                    width: 1,
+                }
+            }
+        }, 
+        shadowSize: 0,
+        legend: {
+            position: 'sw'
+        },
+        tooltip: true,
+
+        tooltipOpts: {
+            content: '%s: %y'
+        },
+        grid:{
+            hoverable: false,
+            clickable: false,
+            borderWidth: 0,
+        },
+        shadowSize: 0,
+        colors: colors
+    };
+    var holder = $('#advertising');
+    if (holder.length) {
+        $.plot(holder, Piedata, chartOptions );
+        $('.adv-stats').html(advStats);
+    }   
+
+
+    var daily_avg = [], daily_avg_week = ['data2'];
+
+    for(var i = 0; i <= 30; i ++){
+        daily_avg[i] = 0;
+    }
+
+    var i = data.items.length - 1;
+    for(; i >= 0; i--){
+    	var day = parseInt((new Date().valueOf()/1000 + (24-new Date().getHours())*3600 - data.items[i].timestamp)/(24*60*60));
+        if(day > 30){
+            break;
         }
+        console.log(day)
+    	if(!daily_avg.hasOwnProperty(day)) daily_avg[day] = 0;
+    	daily_avg[day] += Number(data.items[i].value);
+	}
+
+    for(var i = daily_avg.length - 1; i > 0 && daily_avg[i] == 0; i --){
+        daily_avg.pop();
+    }
+
+        console.log(daily_avg)
+    daily_avg.push('data1');
+    daily_avg = daily_avg.reverse();
+
+    for(var i = daily_avg.length - 1; i >0; i --){
+		daily_avg_week[i] = 0;
+		var ii = i
+		for(; ii > i-7 && ii >0; ii --){
+			daily_avg_week[i] += daily_avg[ii];
+		}
+		daily_avg_week[i] = daily_avg_week[i]/(i-ii);
+	}
 
 
 
+console.log(daily_avg, daily_avg_week)
+	c3.generate( {
+	    bindto:"#barAreaGraph", data: {
+	        columns:[daily_avg, daily_avg_week], types: {
+	            data1: "bar", data2: "area"
+	        }
+	        , names: {
+	            data1: "Payment", data2: "Ghost Payment"
+	        }
+	        , colors: {
+	            data1: "#E9BB27", data2: "#3a86c8"
+	        }
+	    }
+	}
 
+	);
+
+			var s = '';
+            data['items'].reverse();
+			data['items'].forEach((i)=>{
+				if(i.type == 'external'){
+					s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin3.png" alt="coin image">
+	                            <div class="ml-10">
+	                              <h4 class="coin-name">payment`;
+	                s += ' - ' + data.usersName[i.user];
+	                s += `</h4>
+	                              <small class="text-muted">`;
+	                s += i.created_at;
+	                s += `</small>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            `;
+	                s += `<small class="d-block mb-0 txt-red">£-`+Number(i.value).toFixed(2) + `</small>`;
+
+	                s += `
+	                <small class="text-muted d-block"><a href='`+atob(i.url)+`'>see invoice</a></small>
+	                          </div>
+	                        </div>
+						</li>
+`;
+				}
+
+			});
+			data.items.reverse();
+			$('#account-events-2').html(s);
+
+
+    };
 
 
         if(window.localStorage[session.get('hash')]){
@@ -322,14 +638,32 @@
 
 		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
             window.localStorage[session.get('hash')] = JSON.stringify(data);
+			if(!data.length){
+				alert('请先创建一个公共账户！');
+				window.location.href="./setTable.html";
+				return;
+			}
             localLoad(data);
 		});
 
-
 	});
-		
-
-
+}
+load();
+		$("#aaa").bind("input propertychange",function(event){
+       		console.log($("#aaa").val());
+       		$("#aaa").val(clearNoNum($("#aaa").val()))
+		});
+		$("#submit-a").click(function(){
+			if(!$('#aaa').val()) {
+				alert('illegal input');
+				return;
+			}
+			window.location.href='https://imgbed.yimian.xyz/api.html?redirect=https://cp-acc.yimian.xyz/api/newItem.php&passby='+btoa(JSON.stringify({
+				tableId: cookie.get('tableId'),
+				hash: session.get('hash'),
+				value: $("#aaa").val()
+			}));
+		});
 
 
 		/* notification func */
@@ -379,26 +713,37 @@ function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意
 }
 
 
-function confirm(created_at){
-
-	var arr = [];
-
-	data['items'].forEach((item)=>{
-		if(item.created_at == created_at){
-			arr.push(item.id);
-		}
-	});
-
-	$.post('https://cp-acc.yimian.xyz/api/confirmBalance.php&first='+arr[0]+'&last='+arr[1], function(res){
-		notice();
-	});
-}
-
-
 
 	</script>
 
 
+<script language="JavaScript" type="text/javascript">
+    function clearNoNum(value){
+        value = value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        value = value.replace(/^\./g,"");  //验证第一个字符是数字而不是.
+        value = value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的.
+        value = value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+ 		return value;
+    }
+</script>
+
+<script src="https://cdn.yimian.xyz/pjax/pjax.min.js"></script>
+<script>
+  window.pjax = new Pjax({
+    elements: '#index', '#records'
+    selectors: ["head title", "#body", '.main-menu'],
+  });
+
+  document.addEventListener("pjax:complete", function () {
+    /* 重载带data-pjax的script，或者.pjax-reload属性内容的script */
+
+      load();
+  });
+
+
+
+</script>
+</script>
 </body>
 
 </html>

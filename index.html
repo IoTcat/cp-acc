@@ -44,10 +44,10 @@
 				<div class="nav-container">
 					<ul class="main-menu">
 						<li class="active">
-							<a href="index.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
+							<a href="index.html" id="index"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
 						</li>
 						<li class="">
-							<a href="records.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
+							<a href="records.html" id="records"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
 						</li>
 						<li class="">
 							<a href="#" id="setTable"><img src="img/content/icons/11.png" alt=""><strong>Group Setting</strong> </a>
@@ -109,109 +109,113 @@
 					</div>
 				</div>
 
-				<section class="bal-section container">
-					<div class="balance-card mb-15">
-						<div class="d-flex align-items-center">
-	                        <div class="d-flex flex-grow">
-	                          <div class="mr-auto">
-	                            <h1 class="b-val"> £<span id="week-avg"></span> </h1>
-	                            <p class="g-text mb-10">Average Daily Payment</p>
-	                            <div class="badge badge-pill" id="week-avg-rate"> 43.55% <i style="color:red;" class="fa fa-arrow-down ml-10"></i></div>
-	                          </div>
-	                          <div class="ml-auto align-self-end">
-	                            <div id="sparkline1"></div>
-	                          </div>
-	                        </div>
-	                     </div>
-					</div>
-					<div class="resources-card-wrapper">
-						<div class="resources-card mr-10">
-	                        <div class="d-flex flex-column flex-md-row">
-	                          <i class="fa fa-shield text-primary"></i>
-	                          <div class="d-flex flex-column ml-md-2">
-	                            <p class="text-muted mb-10 font-weight-medium">Total Payment</p>
-	                            <div class="progress">
-	                                <div class="progress-bar bg-primary" id="total-bar" role="progressbar" style="width: 97%"></div>
-	                              </div>
-	                            <h4 class="mt-10 mb-0">£<span id="total"></span> </h4>
-	                          </div>
-	                        </div>
-	                    </div>
-	                    <div class="resources-card ml-10">
-	                        <div class="d-flex flex-column flex-md-row">
-	                          <i class="fa fa fa-shopping-cart txt-green"></i>
-	                          <div class="d-flex flex-column ml-md-2">
-	                            <p class="text-muted mb-10 font-weight-medium">Your Payment</p>
-	                            <div class="progress">
-	                                <div class="progress-bar bg-success" id="total-usr-bar" role="progressbar" style="width: 67%"></div>
-	                              </div>
-	                            <h4 class="mt-10 mb-0">£<span id="total-usr"></span> </h4>
-	                          </div>
-	                        </div>
-	                    </div>
-					</div>
-				</section>
-				<br/>
-				<section>
-					<div class="content"> 
-					            <div class="wallet-address">
-                                	<h4 class="w-text mt-0">Report New Payment</h4>
-                                	<div class="form-row-group with-icons">
-										<div class="form-row no-padding">
-											<i>£</i>
-											<input type="text" id="aaa" class="form-element">
+				<div id="body">
+
+					<section class="bal-section container">
+						<div class="balance-card mb-15">
+							<div class="d-flex align-items-center">
+		                        <div class="d-flex flex-grow">
+		                          <div class="mr-auto">
+		                            <h1 class="b-val"> £<span id="week-avg"></span> </h1>
+		                            <p class="g-text mb-10">Average Daily Payment</p>
+		                            <div class="badge badge-pill" id="week-avg-rate"> 43.55% <i style="color:red;" class="fa fa-arrow-down ml-10"></i></div>
+		                          </div>
+		                          <div class="ml-auto align-self-end">
+		                            <div id="sparkline1"></div>
+		                          </div>
+		                        </div>
+		                     </div>
+						</div>
+						<div class="resources-card-wrapper">
+							<div class="resources-card mr-10">
+		                        <div class="d-flex flex-column flex-md-row">
+		                          <i class="fa fa-shield text-primary"></i>
+		                          <div class="d-flex flex-column ml-md-2">
+		                            <p class="text-muted mb-10 font-weight-medium">Total Payment</p>
+		                            <div class="progress">
+		                                <div class="progress-bar bg-primary" id="total-bar" role="progressbar" style="width: 97%"></div>
+		                              </div>
+		                            <h4 class="mt-10 mb-0">£<span id="total"></span> </h4>
+		                          </div>
+		                        </div>
+		                    </div>
+		                    <div class="resources-card ml-10">
+		                        <div class="d-flex flex-column flex-md-row">
+		                          <i class="fa fa fa-shopping-cart txt-green"></i>
+		                          <div class="d-flex flex-column ml-md-2">
+		                            <p class="text-muted mb-10 font-weight-medium">Your Payment</p>
+		                            <div class="progress">
+		                                <div class="progress-bar bg-success" id="total-usr-bar" role="progressbar" style="width: 67%"></div>
+		                              </div>
+		                            <h4 class="mt-10 mb-0">£<span id="total-usr"></span> </h4>
+		                          </div>
+		                        </div>
+		                    </div>
+						</div>
+					</section>
+					<br/>
+					<section>
+						<div class="content"> 
+						            <div class="wallet-address">
+	                                	<h4 class="w-text mt-0">Report New Payment</h4>
+	                                	<div class="form-row-group with-icons">
+											<div class="form-row no-padding">
+												<i>£</i>
+												<input type="text" id="aaa" class="form-element">
+											</div>
 										</div>
-									</div>
-									<h4><a id="submit-a" href="#">Submit</a></h4>
-									<p class="g-text mb-0">Be Careful when Input..</p>
-                                </div>
-                    </div>
-				</section>
+										<h4><a id="submit-a" href="#">Submit</a></h4>
+										<p class="g-text mb-0">Be Careful when Input..</p>
+	                                </div>
+	                    </div>
+					</section>
 
-			    <section class="container">
-			        <div class="content"> 
-			         	<h4 class="title-main">Daily Payment Trend</h4>
-					    <div class="c-panel pl-0">
-					    	
-					        <div class="row align-items-center">
-					        	<div class="col-12">
-					        		<div class="advertising-wrapper">
-										<div id="barAreaGraph" ></div>
-									</div>
-					        	</div>
-					        	
-					        </div>     
-					    </div>
-		  			</div>
-			    </section>
-			    <section class="container">
-			         <div class="content"> 
-			         	<h4 class="title-main">Bill Split</h4>
-					    <div class="c-panel">
-					    	
-					        <div class="row align-items-center">
-					        	<div class="col-12 col-sm-6">
-					        		<div class="advertising-wrapper">
-										<div id="advertising" class="chart-height-sm"></div>
-										<h3 class="info-label"><span>Variance</span> <span id="a-balance"></span></h3>
-									</div>
-					        	</div>
-					        	<div class="col-12 col-sm-6">
-					        		<div class="split-list">
-								        <ul class="adv-stats">
-										</ul>
-								    </div>
-					        	</div>
-					        </div>     
-					    </div>
-		  			</div>
-			    </section>
+				    <section class="container">
+				        <div class="content"> 
+				         	<h4 class="title-main">Daily Payment Trend</h4>
+						    <div class="c-panel pl-0">
+						    	
+						        <div class="row align-items-center">
+						        	<div class="col-12">
+						        		<div class="advertising-wrapper">
+											<div id="barAreaGraph" ></div>
+										</div>
+						        	</div>
+						        	
+						        </div>     
+						    </div>
+			  			</div>
+				    </section>
+				    <section class="container">
+				         <div class="content"> 
+				         	<h4 class="title-main">Bill Split</h4>
+						    <div class="c-panel">
+						    	
+						        <div class="row align-items-center">
+						        	<div class="col-12 col-sm-6">
+						        		<div class="advertising-wrapper">
+											<div id="advertising" class="chart-height-sm"></div>
+											<h3 class="info-label"><span>Variance</span> <span id="a-balance"></span></h3>
+										</div>
+						        	</div>
+						        	<div class="col-12 col-sm-6">
+						        		<div class="split-list">
+									        <ul class="adv-stats">
+											</ul>
+									    </div>
+						        	</div>
+						        </div>     
+						    </div>
+			  			</div>
+				    </section>
 
-				<section class="container">
-					<h4 class="title-main">Recent Transactions</h4>
-					<ul class="transaction-list list-unstyled" id="account-events">
-					</ul>
-				</section>
+					<section class="container">
+						<h4 class="title-main">Recent Transactions</h4>
+						<ul class="transaction-list list-unstyled" id="account-events">
+						</ul>
+					</section>
+
+				</div>
 
 				<footer>
 					<div class="container">
@@ -686,6 +690,41 @@ console.log(daily_avg, daily_avg_week)
 
 	);
 
+			var s = '';
+            data['items'].reverse();
+			data['items'].forEach((i)=>{
+				if(i.type == 'external'){
+					s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <img class="img-xs" src="https://cdn.yimian.xyz/smart-settlement/img/content/coin3.png" alt="coin image">
+	                            <div class="ml-10">
+	                              <h4 class="coin-name">payment`;
+	                s += ' - ' + data.usersName[i.user];
+	                s += `</h4>
+	                              <small class="text-muted">`;
+	                s += i.created_at;
+	                s += `</small>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            `;
+	                s += `<small class="d-block mb-0 txt-red">£-`+Number(i.value).toFixed(2) + `</small>`;
+
+	                s += `
+	                <small class="text-muted d-block"><a href='`+atob(i.url)+`'>see invoice</a></small>
+	                          </div>
+	                        </div>
+						</li>
+`;
+				}
+
+			});
+			data.items.reverse();
+			$('#account-events-2').html(s);
+
+
     };
 
 
@@ -788,8 +827,18 @@ function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意
  		return value;
     }
 </script>
+<script src="https://cdn.yimian.xyz/pjax/pjax.min.js"></script>
 <script>
+  window.pjax = new Pjax({
+    elements: '#index', '#records'
+    selectors: ["head title", "#body", '.main-menu'],
+  });
 
+  document.addEventListener("pjax:complete", function () {
+    /* 重载带data-pjax的script，或者.pjax-reload属性内容的script */
+
+      load();
+  });
 
 </script>
 </body>
