@@ -790,7 +790,8 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
     $lastData = db__getData($auth, "account", "hash", $last)[0];
 
 
-    yimian__mail($lastData['email'], "CP-ACC消息: 您将从".$firstData['nickname']."收到".$threshold."磅/元", "亲爱的".$lastData['nickname']."：
+
+    sendMail($lastData['email'], "CP-ACC消息: 您将从".$firstData['nickname']."收到".$threshold."磅/元", "亲爱的".$lastData['nickname']."：
 
 根据系统的计算，您将从".$firstData['nickname']."(".$firstData['email'].")"."收取".$threshold."磅/元，以保持大家的公共支出相对公平。请在收到对方转账后点击下方确认链接或登入<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>进行确认。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
 
@@ -800,7 +801,7 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
 呓喵酱(@iotcat)", "CP-ACC");
 
 Sleep(10);
-yimian__mail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
+sendMail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
 
 根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
 
@@ -808,4 +809,12 @@ yimian__mail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickna
 呓喵酱(@iotcat)", "CP-ACC");
 
 
+}
+
+
+function sendMail($to, $subject, $body, $from){
+
+    while(!yimian__mail($to, $subject, $body, $from)){
+        Sleep(10);
+    };
 }

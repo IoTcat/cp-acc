@@ -57,6 +57,9 @@
 							<a href="#" id="checkout" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Checkout</strong></a>
 						</li>
 						<li class="">
+							<a href="#" id="switch"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Other Groups</strong></a>
+						</li>
+						<li class="">
 							<a href="https://login.yimian.xyz/logout.html" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Log out</strong></a>
 						</li>
 					</ul>
@@ -264,8 +267,23 @@
 
 
 	<script type="text/javascript">
+try{
+if(cookie.get('cache')){
+    data = JSON.parse(atob(cookie.get('cache')));
+
+    $('#title').html(data.name);
+    $('#total').html(data.total);
+    $('#total-usr').html(data.userTotal);
+    $('#week-avg').html(data.lastWeekTotal);
+
+
+}
+}catch(e){}
+
+
 function load(){
 	session.onload(function(){
+        $('#usr').html('Hi~ '+session.get('nickname'));
 		if(page.params.hasOwnProperty('type') && page.params.type == 'join'){
 
 			window.location.href="./api/joinTable.php?hash="+session.get('hash')+'&tableId='+page.params.tableId;
@@ -278,6 +296,21 @@ function load(){
 				window.location.href="./setTable.html";
 				return;
 			}
+            var buttons = [];
+
+
+            data.forEach(function(item){
+                if(item.id != cookie.get('tableId')){ 
+                    buttons.push(
+                        ['<button><b>'+item.name+'</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            cookie.set('tableId', item.id);
+                            load();
+                            $('.nav-menu').trigger('click');
+                            }, true]
+                    );    
+                }
+            });
 
             if(cookie.get('tableId')){
                 var id = -1;
@@ -297,18 +330,48 @@ function load(){
             }
 			window.data = data;
 
+            buttons.push(
+                ['<button><b>Create New Group</b></button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        window.location.href="./setTable.html"; 
+                    }, true]
+            );    
+
+         
+           buttons.push(
+			    ['<button><b>close</b></button>', function (instance, toast) {
+			            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true]
+            );
+
+          $("#switch").click(function(){
+            tips.question({
+			    timeout: 20000,
+			    close: false,
+			    overlay: true,
+			    displayMode: 'once',
+			    //id: 'question',
+			    zindex: 999,
+			    title: 'Groups',
+			    message: '',
+			    position: 'center',
+			    buttons: buttons
+			});
+          });
+
+
 
             $('#setTable').click(function(){
                 window.location.href="./setTable.html?tableId="+data.id;        
             });
 
             $('#title').html(data.name);
-			$('#usr').html('Hi~ '+session.get('nickname'));
 			$('#total').html(Number(data.total));
 			$('#total-usr').html(Number(data['actualTotals'][session.get('hash')]));
 			$('#total-usr-bar').css('width', (data['actualTotals'][session.get('hash')] / data.average)*100+'%');
             $('#checkout').unbind();
             $('#checkout').click(function(){
+                alert('You will checkout and quit from group '+data.name+'!!');
                 window.location.href="https://cp-acc.yimian.xyz/api/checkout.php?hash="+session.get('hash')+"&tableId="+data.id;        
             });
 
@@ -335,6 +398,13 @@ function load(){
 			if(lastSecodeWeekTotal < lastSecodeWeekTotal) $('#week-avg-rate').html(((lastSecodeWeekTotal - lastWeekTotal)/lastSecodeWeekTotal).toFixed(2)+'% <i style="color:green;" class="fa fa-arrow-down ml-10"></i>');
 
 
+            var briefData = {
+                name: data.name,
+                total: data.total,
+                lastWeekTotal: Number(lastWeekTotal/(7*data.users.length)).toFixed(2),
+                userTotal: Number(data['actualTotals'][session.get('hash')])
+            };
+            cookie.set('cache', btoa(JSON.stringify(briefData)));
 
 			var show = [];
             for(var i = data['items'].length - 1; i > data['items'].length-10 && i >= 0; i --){
