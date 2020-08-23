@@ -218,8 +218,8 @@
 						<ul>
 							<li><a id="ushio-blog" href="https://www.eee.dog"><i class="fa fa-home"></i></a></li>
 							<li><a href="https://github.com/iotcat"><i class="fa fa-github"></i></a></li>
-							<li><a href="mailto:i@yimian.xyz"><i class="fa fa-envelope"></i></a></li>
-							<li><a href="https://www.eee.dog/feed"><i class="fa fa-rss"></i></a></li>
+							<li><a href="mailto:i@iotcat.me"><i class="fa fa-envelope"></i></a></li>
+							<li><a href="https://guide.yimian.xyz/"><i class="fa fa-superpowers"></i></a></li>
 						</ul>
 						<p>© 2018-<script type="text/javascript">document.write(new Date().getFullYear());</script> Made with <span class="shaky"><i style="color:red;" class="fa fa-heart"></i></span> by <a id="ushio-tome" href="https://iotcat.me">iotcat</a></p>
 					</div>
@@ -240,7 +240,6 @@
 	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-footer.min.js"></script>
 
 	<!-- JQuery library file. requared all pages -->
-	<script src="https://cdn.yimian.xyz/smart-settlement/js/jquery-3.2.1.min.js"></script>
 
 	<!-- Swiper JS -->
     <script src="https://cdn.yimian.xyz/smart-settlement/js/swiper.min.js"></script>
@@ -268,7 +267,7 @@
 	<script type="text/javascript">
 try{
 if(cookie.get('cache')){
-    data = JSON.parse(atob(cookie.get('cache')));
+    data = JSON.parse(decodeURIComponent(escape(atob(cookie.get('cache')))));
 
     $('#title').html(data.name);
     $('#total').html(data.total);
@@ -342,6 +341,7 @@ function load(){
                 }, true]
             );
 
+            $('#switch').unbind();
           $("#switch").click(function(){
             tips.question({
 			    timeout: 20000,
@@ -359,6 +359,7 @@ function load(){
 
 
 
+            $('#setTable').unbind();
             $('#setTable').click(function(){
                 window.location.href="./setTable.html?tableId="+data.id;        
             });
@@ -404,8 +405,8 @@ function load(){
                 threshold: data.threshold
             };
             try{
-                cookie.set('cache', btoa(JSON.stringify(briefData)));
-            }catch(e){}
+                cookie.set('cache', btoa(unescape(encodeURIComponent(JSON.stringify(briefData)))));
+            }catch(e){console.log(e, briefData)}
 			var show = [];
             for(var i = data['items'].length - 1; i > data['items'].length-10 && i >= 0; i --){
 				if(data['items'][i]['value'] > 0 && (data['items'][i]['type'] == 'innerF' || data['items'][i]['type'] == 'external'))

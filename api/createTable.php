@@ -3,9 +3,9 @@ include './functions.php';
 
 header("Content-type:application/json");
 
-$hash = $_REQUEST['hash'];
-$name = $_REQUEST['name'];
-$threshold = $_REQUEST['threshold'];
+$hash = $_GET['hash'];
+$name = $_GET['name'];
+$threshold = $_GET['threshold'];
 
 
 if(!isset($hash) || !isset($name) || !isset($threshold)) die();

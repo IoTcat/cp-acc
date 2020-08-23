@@ -791,22 +791,22 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
 
 
 
-    sendMail($lastData['email'], "CP-ACC消息: 您将从".$firstData['nickname']."收到".$threshold."磅/元", "亲爱的".$lastData['nickname']."：
-
-根据系统的计算，您将从".$firstData['nickname']."(".$firstData['email'].")"."收取".$threshold."磅/元，以保持大家的公共支出相对公平。请在收到对方转账后点击下方确认链接或登入<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>进行确认。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
-
-确认链接: <a href='https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."'>https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."</a>
-
-感谢您使用本站服务，祝您生活愉悦！
-呓喵酱(@iotcat)", "CP-ACC");
+    sendMail($lastData['email'], "CP-ACC消息: 您将从".$firstData['nickname']."收到".$threshold."磅", "亲爱的".$lastData['nickname']."：
+<br/> <br/> 
+根据系统的计算，您将从<strong>".$firstData['nickname']."(<a href='mailto:".$firstData['email']."'>".$firstData['email']."</a>)"."</strong>收取<strong>".$threshold."</strong>磅，以保持大家的公共支出相对公平。请在收到对方转账后<strong>点击下方确认链接</strong>或<strong>登入<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a></strong>进行确认。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
+<br/> <br/> 
+<strong>确认链接: <a href='https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."'>https://cp-acc.yimian.xyz/api/confirmBalance.php?first=".$itemIdFirst."&last=".$itemIdLast."</a></strong>
+<br/> <br/> 
+感谢您使用本站服务，祝您生活愉悦！<br/>
+呓喵酱(<a href='https://iotcat.me/'>@iotcat</a>)", "CP-ACC");
 
 Sleep(10);
-sendMail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
-
-根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
-
-感谢您使用本站服务，祝您生活愉悦！
-呓喵酱(@iotcat)", "CP-ACC");
+sendMail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅", "亲爱的".$firstData['nickname']."：
+<br/> <br/> 
+根据系统的计算，您需要给<strong>".$lastData['nickname']."(<a href='mailto:".$lastData['email']."'>".$lastData['email']."</a>)".$threshold."磅</strong>，以保持大家的公共支出相对公平。请在转账后<strong>提醒对方</strong>从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
+<br/> <br/> 
+感谢您使用本站服务，祝您生活愉悦！<br/>
+呓喵酱(<a href='https://iotcat.me/'>@iotcat</a>)", "CP-ACC");
 
 
 }

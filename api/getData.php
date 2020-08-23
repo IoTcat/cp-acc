@@ -2,7 +2,7 @@
 include './functions.php';
 header("Content-type:application/json");
 
-$hash = $_REQUEST['hash'];
+$hash = $_GET['hash'];
 
 
 if(!isset($hash)) die();

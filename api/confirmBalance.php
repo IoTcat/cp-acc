@@ -1,8 +1,8 @@
 <?php
 include './functions.php';
 
-$first = $_REQUEST['first'];
-$last = $_REQUEST['last'];
+$first = $_GET['first'];
+$last = $_GET['last'];
 
 
 

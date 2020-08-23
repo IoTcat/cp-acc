@@ -62,7 +62,7 @@
 					<br/><br/>
 					<div id="qr" align="center" style="display: none;">
 						<p>请让成员打开链接或扫描二维码加入账户：</p>
-						<input width="60%" type="text" id="url">
+                        <input width="60%" type="text" id="url"><button id="copy">copy</button>
 						<div id="qrcode"></div>
 					</div>
 				</div>
@@ -101,11 +101,10 @@
 try{
 	if(page.params.hasOwnProperty('tableId')){
 if(cookie.get('cache')){
-    data = JSON.parse(atob(cookie.get('cache')));
+    data = JSON.parse(decodeURIComponent(escape(atob(cookie.get('cache')))));
 
     $('#name').val(data.name);
     $('#threshold').val(data.threshold);
-
 }
 }
 }catch(e){}
@@ -168,13 +167,74 @@ session.onload(function(){
 					qrcode.makeCode('https://cp-acc.yimian.xyz/?tableId='+res.tableId);
 					$('#url').val('https://cp-acc.yimian.xyz/?tableId='+res.tableId);
                     cookie.set('tableId', res.tableId);
+                    delete window.localStorage[session.get('hash')];
 			});
 		});
 	}
 });
 
 
+window.Clipboard = (function(window, document, navigator) {
+  var textArea,
+      copy;
 
+  // 判断是不是ios端
+  function isOS() {
+    return navigator.userAgent.match(/ipad|iphone/i);
+  }
+  //创建文本元素
+  function createTextArea(text) {
+    textArea = document.createElement('textArea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+  }
+  //选择内容
+  function selectText() {
+    var range,
+        selection;
+
+    if (isOS()) {
+      range = document.createRange();
+      range.selectNodeContents(textArea);
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.select();
+    }
+  }
+
+//复制到剪贴板
+  function copyToClipboard() {        
+    try{
+      if(document.execCommand("Copy")){
+        alert("链接复制成功！");  
+      }else{
+        alert("复制失败！请手动复制！");
+      }
+    }catch(err){
+      alert("复制错误！请手动复制！")
+    }
+    document.body.removeChild(textArea);
+  }
+
+  copy = function(text) {
+    createTextArea(text);
+    selectText();
+    copyToClipboard();
+  };
+
+  return {
+    copy: copy
+  };
+})(window, document, navigator);
+
+
+$('#copy').click(function(){
+	Clipboard.copy($('#url').val());
+});
+	
 </script>
 	
 </body>

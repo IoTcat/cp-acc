@@ -12,7 +12,7 @@ if(!isset($hash) || !isset($tableId) || strlen($hash)<60 || strlen($tableId)<60)
 $cnn = db__connect();
 $data = getFinalData($cnn, $tableId);
 
-if(!db__rowNum($cnn, "user", "user", $hash, "table", $tableId)){
+if(!db__rowNum($cnn, "user", "user", $hash, "table", $tableId, "state", "1")){
     $itemId = hash('sha256', time().$hash.$tableId.rand(222,999));
 
     db__pushData($cnn, "account", array(
@@ -24,13 +24,7 @@ if(!db__rowNum($cnn, "user", "user", $hash, "table", $tableId)){
         "value" => $data['average'],
         "created_at" => date("Y-m-d H:i:s", time())
     ));
-    db__pushData($cnn, "user", array(
-        "user" => $hash,
-        "table" => $tableId,
-        "state" => '1',
-        "created_at" => date("Y-m-d H:i:s", time())
-    ));
-}else{
+}
     db__pushData($cnn, "user", array(
         "user" => $hash,
         "table" => $tableId,
@@ -41,7 +35,6 @@ if(!db__rowNum($cnn, "user", "user", $hash, "table", $tableId)){
         "table" => $tableId
     ));
 
-}
 
 setcookie("tableId", $tableId, time()+3600*12*60*365, "/");
 

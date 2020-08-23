@@ -3,8 +3,8 @@
 include './functions.php';
 
 
-$url = $_REQUEST['url'];
-$passby = $_REQUEST['passby'];
+$url = $_GET['url'];
+$passby = $_GET['passby'];
 
 
 if(!isset($url) || !isset($passby)) die();

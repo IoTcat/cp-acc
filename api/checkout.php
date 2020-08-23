@@ -2,15 +2,40 @@
 
 include './functions.php';
 
-$hash = $_REQUEST['hash'];
-$tableId = $_REQUEST['tableId'];
+$hash = $_GET['hash'];
+$tableId = $_GET['tableId'];
 
 
 if(!isset($hash) || !isset($tableId)) die();
 
+
+/* special php program */
+set_time_limit(0);
+ob_end_clean();
+header("Connection: close");
+ob_start();
+
+
 $cnn = db__connect();
 
 $data = getFinalData($cnn, $tableId);
+
+echo '<script>alert("您已退出！请根据邮件提示进行checkout!!");window.location.href="https://cp-acc.yimian.xyz/"</script>';
+
+
+
+/* close connection */
+ob_end_flush();
+flush();
+if (function_exists("fastcgi_finish_request")) {
+    fastcgi_finish_request();
+}
+sleep(2);
+ignore_user_abort(true);
+set_time_limit(0);
+
+
+
 
 if($data['average'] > $data['virtualTotals'][$hash]){
 	foreach($data['users'] as $user){
@@ -37,4 +62,3 @@ db__pushData($cnn, "user", array(
 	"table" => $tableId
 ));
 
-echo '<script>alert("您已退出！请根据邮件提示进行checkout!!");window.location.href="https://cp-acc.yimian.xyz/"</script>';

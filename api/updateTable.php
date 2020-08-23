@@ -1,9 +1,9 @@
 <?php
 include './functions.php';
 
-$tableId = $_REQUEST['tableId'];
-$name = $_REQUEST['name'];
-$threshold = $_REQUEST['threshold'];
+$tableId = $_GET['tableId'];
+$name = $_GET['name'];
+$threshold = $_GET['threshold'];
 
 
 if(!isset($tableId) || !isset($name) || !isset($threshold)) die();
