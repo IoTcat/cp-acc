@@ -41,16 +41,16 @@
 						
 						<div class="form-row no-padding">
 							<i class="fa "></i>
-							<input type="text" id="name" name="name" class="form-element"  value="default">
+							<input type="text" id="name" name="name" class="form-element"  value="">
 						</div>
 					</div>
 					<br/>
-				<p>请输入最大不平衡度: (请使用整数，比如20)</p>
+				<p>请输入触发阈值: (请使用整数，比如20磅)</p>
 					<div class="form-row-group with-icons">
 		
 						<div class="form-row no-padding">
 							<i class="fa "></i>
-							<input type="text" id="threshold" name="threshold" class="form-element" placeholder="" value="20">
+							<input type="number" id="threshold" name="threshold" class="form-element" placeholder="" value="20">
 						</div>
 					</div>
 
@@ -97,6 +97,47 @@
 				    correctLevel : QRCode.CorrectLevel.M
 				});
 
+
+try{
+	if(page.params.hasOwnProperty('tableId')){
+if(cookie.get('cache')){
+    data = JSON.parse(atob(cookie.get('cache')));
+
+    $('#name').val(data.name);
+    $('#threshold').val(data.threshold);
+
+}
+}
+}catch(e){}
+
+
+function checkInput(){
+    var n = $('#name').val();
+   var th =  $('#threshold').val();
+
+   if(n.length < 3){
+        tips.warning({
+            message: '名称太短啦！'        
+        });
+        return false;
+   }
+   if(n.length > 30){
+        tips.warning({
+            message: '名称太长啦！'        
+        });
+        return false;
+   }
+    th = parseInt(th);
+   if(th <= 0){
+        tips.warning({
+            message: '请输入大于0整数！'        
+        });
+        return false;
+   }
+
+   return true;
+}
+
 session.onload(function(){
 
 	if(page.params.hasOwnProperty('tableId')){
@@ -109,9 +150,10 @@ session.onload(function(){
                 });
         });
 		$('#qr').show();
-		$('#url').val('https://cp-acc.yimian.xyz/?type=join&tableId='+page.params.tableId);
-		qrcode.makeCode('https://cp-acc.yimian.xyz/?type=join&tableId='+page.params.tableId);
+		$('#url').val('https://cp-acc.yimian.xyz/?tableId='+page.params.tableId);
+		qrcode.makeCode('https://cp-acc.yimian.xyz/?tableId='+page.params.tableId);
 		$('#ok').click(function(){
+            if(!checkInput()) return;
 			$.get('./api/updateTable.php?tableId='+page.params.tableId+'&name='+$('#name').val() + "&threshold="+$('#threshold').val(), (res)=>{
 				tips.success({
 					message: '更新成功！'
@@ -120,10 +162,12 @@ session.onload(function(){
 		});
 	}else{
 		$('#ok').click(function(){
+            if(!checkInput()) return;
 			$.get('./api/createTable.php?hash='+session.get('hash')+'&name='+$('#name').val() + "&threshold="+$('#threshold').val(), (res) => {
 					$('#qr').show();
-					qrcode.makeCode('https://cp-acc.yimian.xyz/?type=join&tableId='+res.tableId);
-					$('#url').val('https://cp-acc.yimian.xyz/?type=join&tableId='+res.tableId);
+					qrcode.makeCode('https://cp-acc.yimian.xyz/?tableId='+res.tableId);
+					$('#url').val('https://cp-acc.yimian.xyz/?tableId='+res.tableId);
+                    cookie.set('tableId', res.tableId);
 			});
 		});
 	}

@@ -31,7 +31,7 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/shaky/shaky.css">
 	<script>var block_aplayer = true;</script>
 	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-head.min.js"></script>
-    <script>type="text/javascript">page.auth = ['email', 'nickname'];</script>
+    <script>page.auth = ['email', 'nickname'];</script>
 </head>
 
 <body>
@@ -283,18 +283,17 @@ if(cookie.get('cache')){
 function load(){
 	session.onload(function(){
         $('#usr').html('Hi~ '+session.get('nickname'));
-		if(page.params.hasOwnProperty('type') && page.params.type == 'join'){
+        if(!session.get('email')) return;
+		if(page.params.hasOwnProperty('tableId')){
 
 			window.location.href="./api/joinTable.php?hash="+session.get('hash')+'&tableId='+page.params.tableId;
 			return;
 		}
 
-		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
-			if(!data.length){
-				alert('请先创建一个公共账户！');
-				window.location.href="./setTable.html";
-				return;
-			}
+
+        function localLoad(data){
+            if(!session.get('hash')) return;
+            if(!data.length) return;
             var buttons = [];
 
 
@@ -401,13 +400,15 @@ function load(){
                 name: data.name,
                 total: data.total,
                 lastWeekTotal: Number(lastWeekTotal/(7*data.users.length)).toFixed(2),
-                userTotal: Number(data['actualTotals'][session.get('hash')])
+                userTotal: Number(data['actualTotals'][session.get('hash')]),
+                threshold: data.threshold
             };
-            cookie.set('cache', btoa(JSON.stringify(briefData)));
-
+            try{
+                cookie.set('cache', btoa(JSON.stringify(briefData)));
+            }catch(e){}
 			var show = [];
             for(var i = data['items'].length - 1; i > data['items'].length-10 && i >= 0; i --){
-				if(data['items'][i]['value'] > 0 && data['items'][i]['type'] != 'innerT')
+				if(data['items'][i]['value'] > 0 && (data['items'][i]['type'] == 'innerF' || data['items'][i]['type'] == 'external'))
 				show.push(data['items'][i]);
 			}
 			var s = '';
@@ -460,7 +461,7 @@ function load(){
 
 			var userNotice = [];
 			data['itemsByUser'][session.get('hash')].forEach((item)=>{
-				if(!(item.state == '1')){
+				if(!(item.state == '1') && item.type != 'placeholde'){
 					userNotice.push(item);
 				}
 			});
@@ -560,7 +561,7 @@ function load(){
                 var arr = [];
 
                 data['items'].forEach((item)=>{
-                    if(item.type != 'external' && item.created_at == created_at){
+                    if((item.type == 'innerF' || item.type == 'innerT') && item.created_at == created_at){
                         arr.push(item.id);
                     }
                 });
@@ -682,9 +683,26 @@ console.log(daily_avg, daily_avg_week)
 
 	);
 
+    };
 
 
+        if(window.localStorage[session.get('hash')]){
+            try{
+                data = JSON.parse(window.localStorage[session.get('hash')]);
+                localLoad(data);
+            }catch(e){
+            }
+        } 
 
+
+		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
+            window.localStorage[session.get('hash')] = JSON.stringify(data);
+			if(!data.length){
+				alert('请先创建一个公共账户！');
+				window.location.href="./setTable.html";
+				return;
+			}
+            localLoad(data);
 		});
 
 	});

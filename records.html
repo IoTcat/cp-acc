@@ -30,6 +30,7 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.yimian.xyz/shaky/shaky.css">
 	<script>var block_aplayer = true;</script>
 	<script type="text/javascript" src="https://cdn.yimian.xyz/ushio-js/ushio-head.min.js"></script>
+    <script>page.auth = ['email', 'nickname'];</script>
 
 </head>
 
@@ -138,13 +139,9 @@
 
 	<script type="text/javascript">
 	session.onload(function(){
-		if(page.params.hasOwnProperty('type') && page.params.type == 'join'){
 
-			window.location.href="./api/joinTable.php?hash="+session.get('hash')+'&tableId='+page.params.tableId;
-			return;
-		}
-
-		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
+        if(!session.get('email')) return;
+        function localLoad(data){
 			if(!data.length){
 				alert('请先创建一个公共账户！');
 				window.location.href="./setTable.html";
@@ -211,7 +208,7 @@
 
 			var userNotice = [];
 			data['itemsByUser'][session.get('hash')].forEach((item)=>{
-				if(!(item.state == '1')){
+				if(!(item.state == '1') && item.type != 'placeholde'){
 					userNotice.push(item);
 				}
 			});
@@ -307,12 +304,28 @@
 
 			notice();
 
+        }
 
 
 
 
 
+
+        if(window.localStorage[session.get('hash')]){
+            try{
+                data = JSON.parse(window.localStorage[session.get('hash')]);
+                localLoad(data);
+            }catch(e){
+            }
+        } 
+
+
+		$.get('./api/getData.php?hash='+session.get('hash'), function(data){
+            window.localStorage[session.get('hash')] = JSON.stringify(data);
+            localLoad(data);
 		});
+
+
 	});
 		
 
