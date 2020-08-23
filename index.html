@@ -54,6 +54,9 @@
 							<a href="#" id="setTable"><img src="img/content/icons/11.png" alt=""><strong>Setting</strong> </a>
 						</li>
 						<li class="">
+							<a href="#" id="checkout" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Checkout</strong></a>
+						</li>
+						<li class="">
 							<a href="https://login.yimian.xyz/logout.html" data-loader="show"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/7.png" alt=""><strong>Log out</strong></a>
 						</li>
 					</ul>
@@ -304,8 +307,10 @@ function load(){
 			$('#total').html(Number(data.total));
 			$('#total-usr').html(Number(data['actualTotals'][session.get('hash')]));
 			$('#total-usr-bar').css('width', (data['actualTotals'][session.get('hash')] / data.average)*100+'%');
-
-
+            $('#checkout').unbind();
+            $('#checkout').click(function(){
+                window.location.href="https://cp-acc.yimian.xyz/api/checkout.php?hash="+session.get('hash')+"&tableId="+data.id;        
+            });
 
 
 		var lastWeekTotal = Number(0), lastSecodeWeekTotal = Number(0);
@@ -324,7 +329,7 @@ function load(){
 
 
 
-			$('#week-avg').html(Number(lastWeekTotal/7).toFixed(2));
+			$('#week-avg').html(Number(lastWeekTotal/(7*data.users.length)).toFixed(2));
 			$('#total-bar').css('width', (data['actualTotals'][session.get('hash')] / lastWeekTotal)*100+'%');
 			if(lastWeekTotal > lastSecodeWeekTotal) $('#week-avg-rate').html(((lastWeekTotal - lastSecodeWeekTotal)/lastSecodeWeekTotal).toFixed(2)+'% <i style="color:red;" class="fa fa-arrow-up ml-10"></i>');
 			if(lastSecodeWeekTotal < lastSecodeWeekTotal) $('#week-avg-rate').html(((lastSecodeWeekTotal - lastWeekTotal)/lastSecodeWeekTotal).toFixed(2)+'% <i style="color:green;" class="fa fa-arrow-down ml-10"></i>');
@@ -450,8 +455,8 @@ function load(){
 		                            <div class="ml-10">
 		                              <h4 class="coin-name">`;
 
-		            if(item.value < 0) s += `You will Get £50 from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:page.confirm('`+item.created_at+`');">Confirm to Recived</button>`;
-		            if(item.value > 0) s += `Please Give £50 to `+ data.usersName[item.comments];
+		            if(item.value < 0) s += `You will Get £`+Number(-item.value)+` from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:page.confirm('`+item.created_at+`');">Confirm to Recived</button>`;
+		            if(item.value > 0) s += `Please Give £`+Number(item.value)+` to `+ data.usersName[item.comments];
 
 		            s += `</h4>
 		                              <small class="text-muted">`;

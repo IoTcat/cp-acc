@@ -1,5 +1,6 @@
 <?php
 include '/mnt/config/dbKeys/settlement.php';
+include '/mnt/config/dbKeys/log.php';
 include '/mnt/config/php/config.php';
 /**database connection**/
 
@@ -652,6 +653,14 @@ function getUsers($cnn, $tableId){
     return $arr;
 }
 
+function getAllUsers($cnn, $tableId){
+    $res = db__getData($cnn, 'user', 'table', $tableId);
+    $arr = array();
+    foreach($res as $item){
+        array_push($arr, $item['user']);
+    }
+    return $arr;
+}
 function getItems($cnn, $tableId){
     return db__getData($cnn, "account", "table", $tableId);
 }
@@ -662,6 +671,7 @@ function getTableInfo($cnn, $tableId){
 function getTableData($cnn, $tableId){
     $o = getTableInfo($cnn, $tableId);
     $o['users'] = getUsers($cnn, $tableId);
+    $o['allUsers'] = getAllUsers($cnn, $tableId);
     $o['items'] = getItems($cnn, $tableId);
     return $o;
 }
@@ -717,7 +727,7 @@ function getAverage($tableData){
 function getUsersInfo($tableData){
     $auth = db__connect("","","","auth");
     $tableData['usersName'] = array();
-    foreach($tableData['users'] as $user){
+    foreach($tableData['allUsers'] as $user){
         $tableData['usersName'][$user] = db__getData($auth, "account", "hash", $user)[0]['nickname'];
     }
     return $tableData;
@@ -742,7 +752,6 @@ function getThreshold($cnn, $tableId){
 function checkBalance($data, $threshold){
     foreach($data['virtualTotals'] as $user => $item){
         if($data['average'] - $item > $threshold){
-        }else{
             return false;
         }
     }
@@ -790,14 +799,13 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
 感谢您使用本站服务，祝您生活愉悦！
 呓喵酱(@iotcat)", "CP-ACC");
 
-Sleep(10);
-
-curl__post('https://api.yimian.xyz/mail/?to='.$firstData['email'].'&from=CP-ACC&subject=CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元"."body=亲爱的".$firstData['nickname']."：
+//Sleep(10);
+yimian__mail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
 
 根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
 
 感谢您使用本站服务，祝您生活愉悦！
-呓喵酱(@iotcat)", array());
+呓喵酱(@iotcat)", "CP-ACC");
 
 
 }
