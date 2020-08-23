@@ -66,7 +66,11 @@ while(!checkBalance($data, $threshold)){
 	end($data['virtualTotals']);
 	$last = key($data['virtualTotals']);
 	if($data['average'] - $data['virtualTotals'][$first] > $threshold){
-		setBalance($first, $last, $threshold, $tableId, $cnn);
+        $divisor_f = ($data['average'] - $data['virtualTotals'][$first])/$threshold;
+        settype($divisor_f, "int");
+        $divisor_l = ($data['virtualTotals'][$last] - $data['average'])/$threshold;
+        settype($divisor_l, "int");
+		setBalance($first, $last, min($divisor_f, $divisor_l)*$threshold, $tableId, $cnn);
 	}
     Sleep(10);
 	$data = getFinalData($cnn, $tableId);

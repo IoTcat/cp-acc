@@ -694,7 +694,7 @@ function getTotals($tableData){
     $data = $tableData;
     $data['total'] = 0;
     foreach($data['items'] as $index=>$item){
-        $data['total'] += $item['value'];
+        if($item['type'] == 'external') $data['total'] += $item['value'];
         $data['items'][$index]['timestamp'] = strtotime($item['created_at']);
     }
 
@@ -705,7 +705,7 @@ function getTotals($tableData){
         $virtualTotal = 0;
         foreach($data['items'] as $item){
             if($item['user'] == $user){
-                if($item['state'] == 1){
+                if($item['type'] == 'external' || (($item['type'] == 'innerF' || $item['type'] == 'innerT') && $item['state'] == '1')){
                     $actualTotal += $item['value'];
                 }
                 $virtualTotal += $item['value'];
@@ -719,9 +719,15 @@ function getTotals($tableData){
 }
 
 
-function getAverage($tableData){
-    $tableData['average'] = $tableData['total'] / count($tableData['users']);
-    return $tableData;
+function getAverage($data){
+    $data['average'] = 0;
+    foreach($data['items'] as $item){
+        if($item['type'] == 'external' || $item['type'] == 'placeholde'){
+            $data['average'] += $item['value']; 
+        }
+    };
+    $data['average'] = $data['average'] / count($data['users']);
+    return $data;
 }
 
 function getUsersInfo($tableData){

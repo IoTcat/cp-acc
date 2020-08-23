@@ -367,7 +367,7 @@ function load(){
             $('#title').html(data.name);
 			$('#total').html(Number(data.total));
 			$('#total-usr').html(Number(data['actualTotals'][session.get('hash')]));
-			$('#total-usr-bar').css('width', (data['actualTotals'][session.get('hash')] / data.average)*100+'%');
+			$('#total-usr-bar').css('width', (data['virtualTotals'][session.get('hash')] / data.average)*100+'%');
             $('#checkout').unbind();
             $('#checkout').click(function(){
                 alert('You will checkout and quit from group '+data.name+'!!');
@@ -381,6 +381,7 @@ function load(){
             lastWeekByUser[user] = 0;
         });
 		data.items.forEach(function(item){
+            if(item.state == '0') return;
 			if(item.timestamp > new Date().valueOf()/1000 - 7*24*60*60){
 				lastWeekTotal += Number(item.value);
 				lastWeekByUser[item.user] += Number(item.value);
@@ -589,12 +590,13 @@ function load(){
 
     var colors = ['#F782AA', '#0084B4', '#3FC5AC', '#FFD06B', '#CCCCCC', '#8F3D39', '#9A3481', '#492034', '#593204', '#71e39d', '#B32083', '#D39D32'];
     Piedata = [];
-    Object.keys(data.actualTotals).forEach((user, index)=>{
+    Object.keys(data.virtualTotals).forEach((user, index)=>{
     	advStats += '<li style="color: '+colors[index]+';"><i class="fa fa-circle-o" style="color: '+colors[index]+';"></i>'+data.usersName[user]+' <span >'+((lastWeekByUser[user]/lastWeekTotal)*100).toFixed(2)+'%</span></li>';
-    	Piedata.push({ label: "", data: Math.floor(data.actualTotals[user]) });
-    	variance += Math.pow(data.actualTotals[user] - data.average, 2);
+    	Piedata.push({ label: "", data: Math.floor(data.virtualTotals[user]) });
+    	variance += Math.pow(data.virtualTotals[user] - data.average, 2);
     });
 
+    //Piedata.reverse();
     variance = variance/data.users.length;
     $('#a-balance').html(variance.toFixed(2));
     chartOptions = {        
