@@ -760,8 +760,8 @@ function checkBalance($data, $threshold){
 
 
 function setBalance($first, $last, $threshold, $tableId, $cnn){
-    $itemIdFirst = hash('sha256', time().$tableId.$first);
-    $itemIdLast =  hash('sha256', time().$tableId.$last);
+    $itemIdFirst = hash('sha256', ((int)(microtime(true)*1000)).$tableId.$first.rand(10000, 99999));
+    $itemIdLast =  hash('sha256', ((int)(microtime(true)*1000)).$tableId.$last.rand(10000, 99999));
     $time = time();
     db__pushData($cnn, "account", array(
         "id" => $itemIdFirst,
@@ -799,7 +799,7 @@ function setBalance($first, $last, $threshold, $tableId, $cnn){
 感谢您使用本站服务，祝您生活愉悦！
 呓喵酱(@iotcat)", "CP-ACC");
 
-//Sleep(10);
+Sleep(10);
 yimian__mail($firstData['email'], 'CP-ACC消息: 您需要给'.$lastData['nickname'].$threshold."磅/元", "亲爱的".$firstData['nickname']."：
 
 根据系统的计算，您需要给".$lastData['nickname']."(".$lastData['email'].")".$threshold."磅/元，以保持大家的公共支出相对公平。请在转账后提醒对方从网站或邮件中确认您的支出。您可以通过<a href='https://cp-acc.yimian.xyz/'>CP-ACC网站</a>查看具体账目细节。如有任何疑问，请联系站长呓喵酱(i@iotcat.me)。
