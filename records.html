@@ -214,7 +214,102 @@
 
 			$('#account-events').html(s);
 
-                
+
+			var userNotice = [];
+			data['itemsByUser'][session.get('hash')].forEach((item)=>{
+				if(!(item.state == '1')){
+					userNotice.push(item);
+				}
+			});
+            userNotice.reverse();
+
+			function notice(){
+				var s = '';
+
+				if(!userNotice.length){
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <div class="">
+	                              <h5 class="coin-name">You have NO notifications!!</h5>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            <a href=""></a>
+	                          </div>
+	                        </div>
+						</li>`;
+					$('#no-content').html(s);
+					$("#no-icon").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification-no.png');
+					$("#no-icon2").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification2-no.png');
+					return;
+				}
+
+
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                          <div class="d-flex align-items-center">
+	                            <div class="">
+	                              <h5 class="coin-name">Your last `;
+
+	            s += userNotice.length;
+	            s += ` notifications</h5>
+	                            </div>
+	                          </div>
+	                          <div>
+	                            <a href=""></a>
+	                          </div>
+	                        </div>
+						</li>`;
+
+				userNotice.forEach(function(item){
+					s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                            <div class="d-flex align-items-center">
+		                            <div class="notice-icon `;
+		            if(item.value < 0) s += `available`;
+		            if(item.value > 0) s += `away`;
+
+		            s += `">
+		                                <i class="fa fa-`;
+		            if(item.value < 0) s += `check`;
+		            if(item.value > 0) s += `clock-o`;
+		            s += `"></i>
+		                            </div>
+		                            <div class="ml-10">
+		                              <h4 class="coin-name">`;
+
+		            if(item.value < 0) s += `You will Get £`+Number(-item.value)+` from `+ data.usersName[item.comments] + ` <button style="color: green;" onClick="javascript:page.confirm('`+item.created_at+`');">Confirm to Recived</button>`;
+		            if(item.value > 0) s += `Please Give £`+Number(item.value)+` to `+ data.usersName[item.comments];
+
+		            s += `</h4>
+		                              <small class="text-muted">`;
+		            s += timeago(new Date(item.created_at.replace(/-/g, '/')).getTime());
+		            s += `</small>
+		                            </div>
+	                            </div>
+	                        </div>
+						</li>`;
+				});
+
+				s += `
+						<li>
+							<div class="d-flex align-items-center justify-content-between">
+	                            <div class="d-flex align-items-center">
+		                            <a href="" class="text-muted">The end of all notifications</a>
+	                            </div>
+	                        </div>
+						</li>`;
+
+				$('#no-content').html(s);
+				$("#no-icon").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification-yes.png');
+				$("#no-icon2").attr("src", 'https://cdn.yimian.xyz/smart-settlement/img/content/notification2-yes.png');
+
+			};
+
 
 			notice();
 
