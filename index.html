@@ -830,13 +830,20 @@ function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意
 <script src="https://cdn.yimian.xyz/pjax/pjax.min.js"></script>
 <script>
   window.pjax = new Pjax({
-    elements: '#index', '#records'
+    elements: '#index, #records',
     selectors: ["head title", "#body", '.main-menu'],
   });
 
+ document.addEventListener("pjax:send", function () {
+    $('.nav-menu').trigger('click');
+});
+
+
   document.addEventListener("pjax:complete", function () {
     /* 重载带data-pjax的script，或者.pjax-reload属性内容的script */
-
+    $("#index, #records").each(function () {
+        $(this).parent().append($(this).remove());
+    });
       load();
   });
 

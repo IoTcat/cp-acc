@@ -44,10 +44,10 @@
 				<div class="nav-container">
 					<ul class="main-menu">
 						<li>
-							<a href="index.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
+							<a href="index.html" id="index"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/1.png" alt=""><strong class="special">Dashboard</strong> </a>
 						</li>
 						<li class="active">
-							<a href="records.html"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
+							<a href="records.html" id="records"><img src="https://cdn.yimian.xyz/smart-settlement/img/content/icons/6.png" alt=""><strong class="special">History Payment</strong> </a>
 						</li>
 						<li class="">
 							<a href="#" id="setTable"><img src="img/content/icons/11.png" alt=""><strong>Group Setting</strong> </a>
@@ -730,12 +730,19 @@ function timeago(dateTimeStamp){   //dateTimeStamp是一个时间毫秒，注意
 <script src="https://cdn.yimian.xyz/pjax/pjax.min.js"></script>
 <script>
   window.pjax = new Pjax({
-    elements: '#index', '#records'
+    elements: '#index, #records',
     selectors: ["head title", "#body", '.main-menu'],
   });
 
+ document.addEventListener("pjax:send", function () {
+    $('.nav-menu').trigger('click');
+});
   document.addEventListener("pjax:complete", function () {
+    $('.nav-menu').trigger('click');
     /* 重载带data-pjax的script，或者.pjax-reload属性内容的script */
+    $("#index, #records").each(function () {
+        $(this).parent().append($(this).remove());
+    });
 
       load();
   });
