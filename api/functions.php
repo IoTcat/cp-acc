@@ -403,7 +403,7 @@ function yimian__mail($to, $subject, $body, $from){
 
     $data = array(
         'fromName' => $from, // 发件人名称
-        'from' => "admin@iotcat.xyz", // 发件地址
+        'from' => "no-reply@mail.iotcat.me", // 发件地址
         'to' => $to, // 收件地址
         'replyTo' => "i@iotcat.me", // 回信地址
         'subject' => $subject,
